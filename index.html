@@ -61,21 +61,24 @@
   @media (max-width: 720px) { nav ul { display: none; } }
 
   /* Hero */
-  .hero { position: relative; padding: 130px 0 40px; }
+  .hero { position: relative; min-height: clamp(620px, 100vh, 940px); padding: 130px 0 60px; }
   .hero-bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden;
-    -webkit-mask: linear-gradient(#000 50%, transparent); mask: linear-gradient(#000 50%, transparent); }
+    -webkit-mask: linear-gradient(#000 86%, transparent); mask: linear-gradient(#000 86%, transparent); }
   .hero-bg::before { content: ""; position: absolute; inset: 0;
-    background: url(assets/ntnu-building.webp) center 35% / cover no-repeat;
-    opacity: .5; filter: saturate(.55) brightness(.9);
-    animation: kenburns 30s ease-in-out infinite alternate; }
+    background: url(assets/ntnu-building.webp) center 78% / cover no-repeat;
+    opacity: .82; filter: saturate(.8) brightness(.95);
+    transform-origin: 50% 70%; animation: kenburns 30s ease-in-out infinite alternate; }
   .hero-bg::after { content: ""; position: absolute; inset: 0;
-    background: linear-gradient(90deg, rgba(5,6,15,.95) 0%, rgba(5,6,15,.6) 45%, rgba(5,6,15,.3) 100%),
-                linear-gradient(rgba(5,6,15,.5), transparent 30%); }
-  @keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.08); } }
-  .hero-stack { display: flex; flex-direction: column; gap: 56px; }
-  .hero-text { max-width: 900px; }
-  .sims { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
-  @media (max-width: 760px) { .sims { grid-template-columns: 1fr; } }
+    background: linear-gradient(90deg, rgba(5,6,15,.78) 0%, rgba(5,6,15,.45) 38%, rgba(5,6,15,.08) 70%, rgba(5,6,15,.15) 100%),
+                linear-gradient(rgba(5,6,15,.72) 0%, rgba(5,6,15,.45) 32%, rgba(5,6,15,0) 58%, rgba(5,6,15,.2) 88%, rgba(5,6,15,.6) 100%),
+                linear-gradient(120deg, rgba(77,141,255,.10), rgba(157,107,255,.12)); }
+  @keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.05); } }
+  .hero-stack { display: flex; flex-direction: column; }
+  .hero-text { max-width: 760px; text-shadow: 0 2px 14px rgba(5,6,15,.85), 0 0 2px rgba(5,6,15,.6); }
+  .hero-text .lead { color: #d3d8f5; }
+  .sims-wrap { padding-top: 56px; }
+  .sims { display: grid; grid-template-columns: repeat(2, minmax(0, 390px)); justify-content: center; gap: 28px; }
+  @media (max-width: 820px) { .sims { grid-template-columns: minmax(0, 390px); } }
   .eyebrow { font-size: 13px; letter-spacing: .18em; text-transform: uppercase; color: var(--cyan); display: flex; align-items: center; gap: 10px; }
   .eyebrow .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); animation: pulse 2s infinite; }
   @keyframes pulse { 50% { opacity: .3; } }
@@ -105,7 +108,7 @@
     background: radial-gradient(circle at 50% 60%, rgba(77,141,255,.12), rgba(10,12,30,.4) 70%); overflow: hidden; }
   .arm-frame canvas { width: 100%; height: 100%; display: block; }
   .hud { position: absolute; font-size: 11px; color: var(--muted); letter-spacing: .06em; }
-  .hud.tl { top: 14px; left: 16px; } .hud.tr { top: 14px; right: 16px; text-align: right; } .hud.bl { bottom: 14px; left: 16px; }
+  .hud.tl { top: 14px; left: 16px; } .hud.tr { top: 14px; right: 16px; text-align: right; } .hud.bl { bottom: 14px; left: 16px; } .hud.br { bottom: 12px; right: 16px; text-align: right; }
   .hud b { color: var(--cyan); font-weight: 500; }
   .hud.joints { display: grid; grid-template-columns: auto auto; column-gap: 14px; row-gap: 1px; }
   .hud.joints b { display: inline-block; min-width: 52px; text-align: right; font-variant-numeric: tabular-nums; }
@@ -297,12 +300,16 @@
         <a class="btn" href="#contact">Contact</a>
       </div>
     </div>
+  </div>
+</header>
+
+<div class="wrap sims-wrap">
 
     <div class="sims">
       <div class="arm-frame panel">
         <canvas id="arm" aria-label="Animated six-axis robot arm with a wrist-mounted depth camera scanning cylinders on a table"></canvas>
         <div class="hud tl mono">6-DOF MANIPULATOR<br>RGB-D CAMERA · 87°×58° FOV</div>
-        <div class="hud tr mono joints">
+        <div class="hud br mono joints">
           <span>θ₁ <b id="th1">0.0°</b></span><span>θ₄ <b id="th4">0.0°</b></span>
           <span>θ₂ <b id="th2">0.0°</b></span><span>θ₅ <b id="th5">0.0°</b></span>
           <span>θ₃ <b id="th3">0.0°</b></span><span>θ₆ <b id="th6">0.0°</b></span>
@@ -311,16 +318,14 @@
       </div>
       <div class="arm-frame panel">
         <canvas id="dp" aria-label="Animated top-down view of a ship holding its position with dynamic positioning against wind, waves and current"></canvas>
-        <div class="hud tl mono">DYNAMIC POSITIONING<br>STATION KEEPING · PID</div>
-        <div class="hud tr mono joints">
+        <div class="hud tl mono">DYNAMIC POSITIONING · PID<br><span style="color:#d16bff">━</span> ENVIRONMENT &nbsp;<span style="color:#5ee0ff">━</span> THRUSTERS</div>
+        <div class="hud br mono joints">
           <span>N err <b id="dpN">0.00 m</b></span><span>ψ <b id="dpPsi">0.0°</b></span>
           <span>E err <b id="dpE">0.00 m</b></span><span>thrust <b id="dpT">0 %</b></span>
         </div>
-        <div class="hud bl mono"><span style="color:#d16bff">━</span> ENVIRONMENT &nbsp;<span style="color:#5ee0ff">━</span> THRUSTERS</div>
       </div>
     </div>
-  </div>
-</header>
+</div>
 
 <main class="wrap">
 
