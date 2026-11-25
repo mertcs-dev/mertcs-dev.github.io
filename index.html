@@ -99,6 +99,14 @@
   .arm-frame { position: relative; aspect-ratio: 1; border-radius: 24px; border: 1px solid var(--line);
     background: radial-gradient(circle at 50% 60%, rgba(77,141,255,.12), rgba(10,12,30,.4) 70%); overflow: hidden; }
   .arm-frame canvas { width: 100%; height: 100%; display: block; }
+  .scene { position: absolute; inset: 0; opacity: 0; transition: opacity .9s ease; pointer-events: none; }
+  .scene.active { opacity: 1; }
+  .scene-tabs { position: absolute; bottom: 12px; right: 12px; display: flex; gap: 4px; padding: 4px; border-radius: 999px;
+    background: rgba(10,12,30,.7); border: 1px solid var(--line); backdrop-filter: blur(8px); z-index: 2; }
+  .scene-tabs button { font: inherit; font-size: 11px; letter-spacing: .04em; color: var(--muted); background: none; border: 0;
+    padding: 5px 11px; border-radius: 999px; cursor: pointer; transition: .2s; }
+  .scene-tabs button:hover { color: var(--ink); }
+  .scene-tabs button.on { color: #fff; background: var(--grad); }
   .hud { position: absolute; font-size: 11px; color: var(--muted); letter-spacing: .06em; }
   .hud.tl { top: 14px; left: 16px; } .hud.tr { top: 14px; right: 16px; text-align: right; } .hud.bl { bottom: 14px; left: 16px; }
   .hud b { color: var(--cyan); font-weight: 500; }
@@ -205,20 +213,7 @@
     background: rgba(77,141,255,.1); color: #a9c4ff; border: 1px solid rgba(77,141,255,.25); }
 
   /* Projects */
-  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
-  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
-  .card.wide { grid-column: 1 / -1; display: grid; grid-template-columns: 0.8fr 1.2fr; }
-  .card.wide .art { height: auto; min-height: 260px; border-bottom: 0; border-right: 1px solid var(--line); display: grid; place-items: center; }
-  .card.wide .art svg { height: auto; max-height: 320px; }
-  .card.wide .body { padding: 26px 28px; }
-  .card.wide h3 { font-size: 21px; margin-bottom: 10px; }
-  .card.wide p { color: #c7cdf0; }
-  .card.wide .spec { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 6px; }
-  .card.wide .spec ol, .card.wide .spec ul { margin-top: 8px; padding-left: 18px; font-size: 14px; color: #c7cdf0; }
-  .card.wide .spec li { margin-bottom: 6px; } .card.wide .spec li::marker { color: var(--purple); }
-  .card.wide .spec b { color: var(--ink); font-weight: 600; }
-  .card.wide .note { margin-top: 14px; font-size: 14px; color: var(--muted); }
-  @media (max-width: 860px) { .card.wide { grid-template-columns: 1fr; } .card.wide .art { border-right: 0; border-bottom: 1px solid var(--line); min-height: 200px; } .card.wide .spec { grid-template-columns: 1fr; } }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 18px; }
   .card { position: relative; padding: 0; overflow: hidden; transition: transform .3s; transform-style: preserve-3d; }
   .card::after { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
     background: radial-gradient(300px circle at var(--mx, 50%) var(--my, 50%), rgba(157,107,255,.8), transparent 60%);
@@ -312,15 +307,30 @@
       </div>
     </div>
 
-    <div class="arm-frame panel">
-      <canvas id="arm" aria-label="Animated six-axis robot arm with a wrist-mounted depth camera scanning cylinders on a table"></canvas>
-      <div class="hud tl mono">6-DOF MANIPULATOR<br>RGB-D CAMERA · 87°×58° FOV</div>
-      <div class="hud tr mono joints">
-        <span>θ₁ <b id="th1">0.0°</b></span><span>θ₄ <b id="th4">0.0°</b></span>
-        <span>θ₂ <b id="th2">0.0°</b></span><span>θ₅ <b id="th5">0.0°</b></span>
-        <span>θ₃ <b id="th3">0.0°</b></span><span>θ₆ <b id="th6">0.0°</b></span>
+    <div class="arm-frame panel" id="sim">
+      <div class="scene active" data-scene="arm">
+        <canvas id="arm" aria-label="Animated six-axis robot arm with a wrist-mounted depth camera scanning cylinders on a table"></canvas>
+        <div class="hud tl mono">6-DOF MANIPULATOR<br>RGB-D CAMERA · 87°×58° FOV</div>
+        <div class="hud tr mono joints">
+          <span>θ₁ <b id="th1">0.0°</b></span><span>θ₄ <b id="th4">0.0°</b></span>
+          <span>θ₂ <b id="th2">0.0°</b></span><span>θ₅ <b id="th5">0.0°</b></span>
+          <span>θ₃ <b id="th3">0.0°</b></span><span>θ₆ <b id="th6">0.0°</b></span>
+        </div>
+        <div class="hud bl mono">POINT CLOUD · <b id="npts">0</b> pts</div>
       </div>
-      <div class="hud bl mono">POINT CLOUD · <b id="npts">0</b> pts</div>
+      <div class="scene" data-scene="dp">
+        <canvas id="dp" aria-label="Animated top-down view of a ship holding its position with dynamic positioning against wind, waves and current"></canvas>
+        <div class="hud tl mono">DYNAMIC POSITIONING<br>STATION KEEPING · PID</div>
+        <div class="hud tr mono joints">
+          <span>N err <b id="dpN">0.00 m</b></span><span>ψ <b id="dpPsi">0.0°</b></span>
+          <span>E err <b id="dpE">0.00 m</b></span><span>thrust <b id="dpT">0 %</b></span>
+        </div>
+        <div class="hud bl mono"><span style="color:#d16bff">━</span> ENVIRONMENT &nbsp;<span style="color:#5ee0ff">━</span> THRUSTERS</div>
+      </div>
+      <div class="scene-tabs mono" role="tablist">
+        <button class="on" data-go="arm" role="tab">Manipulator</button>
+        <button data-go="dp" role="tab">DP vessel</button>
+      </div>
     </div>
   </div>
 </header>
@@ -383,6 +393,7 @@
         <ul>
           <li>Supervised Raspberry Pi labs, Python data analysis with pandas, and RapidMiner machine learning.</li>
           <li>Helped students with their weekly assignments and graded the submissions.</li>
+          <li>In 2026, also assisted with welcoming and supporting new students during NTNU's orientation week (Teknostart).</li>
         </ul>
         <div class="tags"><span class="tag">Python</span><span class="tag">pandas</span><span class="tag">Raspberry Pi</span><span class="tag">RapidMiner</span></div>
       </div>
@@ -449,7 +460,7 @@
         </div>
       </article>
 
-      <article class="card panel wide">
+      <article class="card panel">
         <div class="art">
           <!-- ESP32 + moisture + drops -->
           <svg viewBox="0 0 300 150">
@@ -468,31 +479,9 @@
           </svg>
         </div>
         <div class="body">
-          <h3>Automatic Plant Watering System</h3>
-          <p>A soil-moisture controlled watering system built on an ESP32, made in Microlabs, an open-source project at NTNU's Department of Engineering Cybernetics (ITK) for hands-on, student-active learning in TTK4225. The ESP32 reads a moisture sensor through its analog input and switches a small DC pump on when the soil gets too dry, then off again once it is wet enough. It is a simple on/off (bang-bang) controller, with sensor, logic and actuator all running on one microcontroller.</p>
-          <div class="spec">
-            <div>
-              <div class="course-label">How it works</div>
-              <ol>
-                <li><b>Sense:</b> a capacitive or resistive moisture probe is sampled through the ESP32's ADC every 200&nbsp;ms.</li>
-                <li><b>Decide:</b> the reading is compared to a calibrated threshold. Dry soil gives a higher reading.</li>
-                <li><b>Act:</b> a GPIO pin drives a relay or a logic-level MOSFET that powers the pump, with a flyback diode protecting the circuit from voltage spikes when the motor switches off.</li>
-              </ol>
-            </div>
-            <div>
-              <div class="course-label">Components</div>
-              <ul>
-                <li>ESP32 dev board (NodeMCU-32S compatible)</li>
-                <li>Capacitive and resistive soil moisture sensors</li>
-                <li>3&nbsp;V DC submersible pump</li>
-                <li>Power relay or IRLZ44N logic-level MOSFET</li>
-                <li>1N4001 flyback diode</li>
-                <li>Breadboard prototype, then soldered perfboard</li>
-              </ul>
-            </div>
-          </div>
-          <p class="note">Firmware written in C++ with the Arduino framework, built and flashed with PlatformIO in VS Code. Natural next steps are logging and plotting moisture over time, a Home Assistant dashboard, and a water reservoir level sensor.</p>
-          <div class="tags"><span class="tag">ESP32</span><span class="tag">C++</span><span class="tag">PlatformIO</span><span class="tag">ADC</span><span class="tag">MOSFET / relay</span><span class="tag">Sensors</span></div>
+          <h3>Automatic Plant Watering</h3>
+          <p>ESP32 reads soil moisture sensors and drives a pump through a MOSFET and relay to water the plants when the soil is dry. Part of NTNU ITK's open-source Microlabs project, with firmware written in C++ using PlatformIO and a flyback diode protecting the circuit when the pump switches off.</p>
+          <div class="tags"><span class="tag">ESP32</span><span class="tag">C++</span><span class="tag">PlatformIO</span><span class="tag">Sensors</span></div>
           <div class="card-links"><a href="https://github.com/Microlabs-Project-ITK-NTNU/Plants-watering-system" target="_blank" rel="noopener">View on GitHub →</a></div>
         </div>
       </article>
@@ -817,6 +806,162 @@ const DPR = Math.min(window.devicePixelRatio || 1, 2);
     if (!reduce) requestAnimationFrame(draw);
   }
   draw();
+})();
+
+/* ---------- DP vessel: station keeping against wind, waves and current ---------- */
+(() => {
+  const c = document.getElementById('dp'), ctx = c.getContext('2d');
+  const nEl = document.getElementById('dpN'), eEl = document.getElementById('dpE');
+  const psiEl = document.getElementById('dpPsi'), tEl = document.getElementById('dpT');
+  let S;
+  function resize() { const r = c.getBoundingClientRect(); c.width = r.width * DPR; c.height = r.height * DPR; S = c.width / 400; }
+  resize(); addEventListener('resize', resize);
+
+  const CX = 200, CY = 205, PX = 26;            // setpoint on screen, pixels per metre of position error
+  const PSI0 = -25 * Math.PI / 180;             // heading setpoint (from north, clockwise)
+  // state: north, east (m), velocities, heading error (rad), yaw rate, integrators
+  let n = 1.2, e = -0.8, vn = 0, ve = 0, dpsi = 0.08, r = 0, In = 0, Ie = 0, Ipsi = 0, t = 0;
+  const trail = [];
+
+  function arrow(x, y, dx, dy, col, w) {
+    const L = Math.hypot(dx, dy); if (L < 2) return;
+    const ux = dx / L, uy = dy / L, h = Math.min(8, L * 0.45);
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + dx - ux * h * 0.6, y + dy - uy * h * 0.6); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x + dx, y + dy);
+    ctx.lineTo(x + dx - ux * h - uy * h * 0.5, y + dy - uy * h + ux * h * 0.5);
+    ctx.lineTo(x + dx - ux * h + uy * h * 0.5, y + dy - uy * h - ux * h * 0.5); ctx.closePath(); ctx.fill();
+  }
+
+  function step(dt) {
+    t += dt;
+    // environmental loads (world frame, north/east) and yaw moment
+    const envDir = 0.9 + 0.35 * Math.sin(0.05 * t);                  // slowly veering weather
+    const mag = 0.55 + 0.2 * Math.sin(0.23 * t) + 0.12 * Math.sin(1.1 * t) + 0.06 * Math.sin(2.3 * t + 1);
+    const Fn = -Math.cos(envDir) * mag, Fe = -Math.sin(envDir) * mag;
+    const Mz = 0.06 * Math.sin(0.19 * t) + 0.03 * Math.sin(0.9 * t);
+    // PID station-keeping controller
+    In = Math.max(-1.5, Math.min(1.5, In + n * dt)); Ie = Math.max(-1.5, Math.min(1.5, Ie + e * dt));
+    Ipsi = Math.max(-1, Math.min(1, Ipsi + dpsi * dt));
+    const tn = -1.6 * n - 2.6 * vn - 0.55 * In, te = -1.6 * e - 2.6 * ve - 0.55 * Ie;
+    const tz = -2.0 * dpsi - 2.4 * r - 0.6 * Ipsi;
+    // vessel dynamics (mass-damper)
+    vn += (tn + Fn - 0.4 * vn) * dt; ve += (te + Fe - 0.4 * ve) * dt; r += (tz + Mz - 0.5 * r) * dt;
+    n += vn * dt; e += ve * dt; dpsi += r * dt;
+    return { Fn, Fe, tn, te, tz, envDir, mag };
+  }
+
+  let last = performance.now(), env;
+  function draw(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    env = step(dt);
+    const active = c.closest('.scene').classList.contains('active');
+    if (active) render();
+    if (!reduce) requestAnimationFrame(draw);
+  }
+
+  function render() {
+    ctx.setTransform(S, 0, 0, S, 0, 0);
+    ctx.clearRect(0, 0, 400, 400);
+
+    // sea: wave crests travelling with the weather direction
+    ctx.save(); ctx.translate(200, 200); ctx.rotate(env.envDir + Math.PI / 2);
+    for (let k = -9; k <= 9; k++) {
+      const off = ((k * 34 + t * 22) % 612 + 612) % 612 - 306;
+      ctx.strokeStyle = `rgba(94,160,255,${0.10 + 0.08 * Math.sin(k + t * 0.5) ** 2})`; ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      for (let s = -300; s <= 300; s += 12) {
+        const y = off + Math.sin(s * 0.03 + k + t * 0.8) * 4;
+        s === -300 ? ctx.moveTo(s, y) : ctx.lineTo(s, y);
+      }
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // north/east grid and tolerance circle around the setpoint
+    ctx.strokeStyle = 'rgba(130,140,255,0.07)'; ctx.lineWidth = 1;
+    for (let g = 0; g <= 400; g += 26) { ctx.beginPath(); ctx.moveTo(g, 0); ctx.lineTo(g, 400); ctx.moveTo(0, g); ctx.lineTo(400, g); ctx.stroke(); }
+    ctx.setLineDash([4, 6]); ctx.strokeStyle = 'rgba(157,107,255,0.45)';
+    ctx.beginPath(); ctx.arc(CX, CY, 2.5 * PX, 0, 7); ctx.stroke();
+    ctx.beginPath(); ctx.arc(CX, CY, 5 * PX, 0, 7); ctx.strokeStyle = 'rgba(157,107,255,0.18)'; ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.strokeStyle = 'rgba(209,107,255,0.8)'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(CX - 9, CY); ctx.lineTo(CX + 9, CY); ctx.moveTo(CX, CY - 9); ctx.lineTo(CX, CY + 9); ctx.stroke();
+    ctx.font = '9px JetBrains Mono'; ctx.fillStyle = 'rgba(157,107,255,0.7)';
+    ctx.fillText('2.5 m', CX + 2.5 * PX * 0.72 + 4, CY - 2.5 * PX * 0.72);
+    // north arrow
+    ctx.fillStyle = '#8f97c4'; ctx.fillText('N', 22, 76);
+    arrow(25, 100, 0, -18, '#8f97c4', 1.4);
+
+    // position trail (vessel reference point)
+    const px = CX + e * PX, py = CY - n * PX;
+    trail.push([px, py]); if (trail.length > 420) trail.shift();
+    for (let i = 1; i < trail.length; i++) {
+      const f = i / trail.length;
+      ctx.strokeStyle = `rgba(94,224,255,${f * 0.6})`; ctx.lineWidth = 1.5 * f;
+      ctx.beginPath(); ctx.moveTo(trail[i - 1][0], trail[i - 1][1]); ctx.lineTo(trail[i][0], trail[i][1]); ctx.stroke();
+    }
+
+    // vessel (bow along +x in body frame)
+    const psi = PSI0 + dpsi, a = psi - Math.PI / 2, ca = Math.cos(a), sa = Math.sin(a);
+    const B = (x, y) => [px + x * ca - y * sa, py + x * sa + y * ca];
+    ctx.save(); ctx.translate(px, py); ctx.rotate(a);
+    ctx.shadowColor = 'rgba(77,141,255,0.5)'; ctx.shadowBlur = 18;
+    const hull = new Path2D('M-78 -21 L38 -21 Q70 -18 84 0 Q70 18 38 21 L-78 21 Q-84 0 -78 -21 Z');
+    const hg = ctx.createLinearGradient(-80, 0, 84, 0); hg.addColorStop(0, '#16204a'); hg.addColorStop(1, '#1d2a5e');
+    ctx.fillStyle = hg; ctx.fill(hull); ctx.shadowBlur = 0;
+    ctx.strokeStyle = '#6f7dff'; ctx.lineWidth = 1.6; ctx.stroke(hull);
+    // bridge / accommodation forward, open cargo deck aft
+    ctx.fillStyle = '#26346f'; ctx.strokeStyle = '#9d6bff'; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.roundRect(18, -15, 34, 30, 4); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = 'rgba(94,224,255,0.6)'; ctx.fillRect(46, -11, 3, 22);
+    ctx.strokeStyle = 'rgba(143,151,196,0.35)'; ctx.lineWidth = 1;
+    for (let x = -70; x <= 8; x += 13) { ctx.beginPath(); ctx.moveTo(x, -16); ctx.lineTo(x, 16); ctx.stroke(); }
+    // GNSS antenna blink
+    ctx.fillStyle = Math.sin(t * 6) > 0 ? '#5ee0ff' : 'rgba(94,224,255,0.25)';
+    ctx.beginPath(); ctx.arc(32, 0, 2.5, 0, 7); ctx.fill();
+    ctx.restore();
+
+    // thrust vectors: two stern azimuths share surge/sway, bow tunnel thruster handles yaw
+    const K = 60;
+    const tE = env.te * K, tN = env.tn * K;                    // screen: x = east, y = -north
+    const yawF = env.tz * 140;
+    for (const yb of [-12, 12]) {
+      const [sx, sy] = B(-74, yb);
+      const yawPart = -yawF * 0.25;                            // stern pushes opposite to bow for yaw
+      arrow(sx, sy, tE / 2 + yawPart * -sa, -tN / 2 + yawPart * ca, '#5ee0ff', 2.2);
+      ctx.fillStyle = '#0b0f26'; ctx.strokeStyle = '#5ee0ff'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(sx, sy, 4, 0, 7); ctx.fill(); ctx.stroke();
+    }
+    const [bx, by] = B(60, 0);
+    arrow(bx, by, yawF * -sa, yawF * ca, '#5ee0ff', 2.2);
+
+    // environmental load on the hull
+    arrow(px, py, env.Fe * 95, -env.Fn * 95, 'rgba(209,107,255,0.9)', 2.4);
+
+    // HUD numbers (scaled to a plausible ship-size error in metres)
+    nEl.textContent = (n * 1).toFixed(2).padStart(5, ' ') + ' m';
+    eEl.textContent = (e * 1).toFixed(2).padStart(5, ' ') + ' m';
+    psiEl.textContent = (((psi * 180 / Math.PI) + 360) % 360).toFixed(1) + '°';
+    tEl.textContent = Math.min(100, Math.round(Math.hypot(env.tn, env.te) * 110)) + ' %';
+  }
+
+  if (reduce) { for (let i = 0; i < 600; i++) step(1 / 60); env = step(1 / 60); render(); }
+  else requestAnimationFrame(t0 => { last = t0; requestAnimationFrame(draw); });
+})();
+
+/* ---------- Scene tabs: manipulator / DP vessel ---------- */
+(() => {
+  const sim = document.getElementById('sim');
+  const scenes = sim.querySelectorAll('.scene'), tabs = sim.querySelectorAll('.scene-tabs button');
+  let cur = 'arm';
+  const show = name => {
+    cur = name;
+    scenes.forEach(s => s.classList.toggle('active', s.dataset.scene === name));
+    tabs.forEach(b => { b.classList.toggle('on', b.dataset.go === name); b.setAttribute('aria-selected', b.dataset.go === name); });
+  };
+  let auto = reduce ? null : setInterval(() => show(cur === 'arm' ? 'dp' : 'arm'), 12000);
+  tabs.forEach(b => b.addEventListener('click', () => { clearInterval(auto); auto = null; show(b.dataset.go); }));
 })();
 
 /* ---------- Photo slideshows in project cards ---------- */
