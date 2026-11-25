@@ -61,7 +61,7 @@
   @media (max-width: 720px) { nav ul { display: none; } }
 
   /* Hero */
-  .hero { position: relative; min-height: 100vh; display: grid; align-items: center; padding: 120px 0 60px; }
+  .hero { position: relative; padding: 130px 0 40px; }
   .hero-bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden;
     -webkit-mask: linear-gradient(#000 50%, transparent); mask: linear-gradient(#000 50%, transparent); }
   .hero-bg::before { content: ""; position: absolute; inset: 0;
@@ -72,52 +72,43 @@
     background: linear-gradient(90deg, rgba(5,6,15,.95) 0%, rgba(5,6,15,.6) 45%, rgba(5,6,15,.3) 100%),
                 linear-gradient(rgba(5,6,15,.5), transparent 30%); }
   @keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.08); } }
-  .hero-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; }
+  .hero-stack { display: flex; flex-direction: column; gap: 56px; }
+  .hero-text { max-width: 900px; }
+  .sims { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  @media (max-width: 760px) { .sims { grid-template-columns: 1fr; } }
   .eyebrow { font-size: 13px; letter-spacing: .18em; text-transform: uppercase; color: var(--cyan); display: flex; align-items: center; gap: 10px; }
   .eyebrow .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); animation: pulse 2s infinite; }
   @keyframes pulse { 50% { opacity: .3; } }
   h1 { font-family: "Orbitron", sans-serif; font-weight: 800; font-size: clamp(40px, 6.6vw, 76px); line-height: 1.02; letter-spacing: .01em; margin-top: 18px; }
-  h1 .line { display: block; opacity: 0; transform: translateY(30px); animation: rise .9s cubic-bezier(.2,.8,.2,1) forwards; }
+  h1 .line { display: inline-block; opacity: 0; transform: translateY(30px); animation: rise .9s cubic-bezier(.2,.8,.2,1) forwards; }
   h1 .line:nth-child(2) { animation-delay: .15s; }
   @keyframes rise { to { opacity: 1; transform: none; } }
   .role { margin-top: 18px; font-size: clamp(16px, 2vw, 20px); color: var(--muted); min-height: 1.6em; }
   .role .typed { color: var(--ink); border-right: 2px solid var(--purple); padding-right: 4px; animation: caret 1s steps(1) infinite; }
   @keyframes caret { 50% { border-color: transparent; } }
-  .lead { margin-top: 16px; max-width: 520px; color: var(--muted); font-size: 17px; }
+  .lead { margin-top: 16px; max-width: 760px; color: var(--muted); font-size: 18px; }
   .actions { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 12px; }
-  .btn { position: relative; display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 999px;
-    font-weight: 600; font-size: 15px; text-decoration: none; transition: transform .2s, box-shadow .3s; }
-  .btn:hover { transform: translateY(-2px); }
-  .btn-primary { background: var(--grad); background-size: 200% 100%; color: #fff; animation: sheen 6s linear infinite; box-shadow: 0 8px 30px rgba(120,100,255,.35); }
-  .btn-primary:hover { box-shadow: 0 10px 40px rgba(140,110,255,.6); }
+  .btn { position: relative; isolation: isolate; overflow: hidden; display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 999px;
+    font-weight: 600; font-size: 15px; text-decoration: none; color: var(--ink);
+    border: 1px solid var(--line); background: rgba(255,255,255,.03); backdrop-filter: blur(6px);
+    transition: transform .25s ease, box-shadow .35s ease, border-color .35s ease, color .35s ease; }
+  .btn::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: var(--grad);
+    background-size: 200% 100%; opacity: 0; transition: opacity .35s ease; animation: sheen 6s linear infinite; }
+  .btn:hover, .btn:focus-visible { transform: translateY(-2px); color: #fff; border-color: transparent;
+    box-shadow: 0 10px 34px rgba(120,100,255,.45), 0 0 0 1px rgba(157,107,255,.35); outline: none; }
+  .btn:hover::before, .btn:focus-visible::before { opacity: 1; }
   @keyframes sheen { to { background-position: 200% 0; } }
-  .btn-ghost { border: 1px solid var(--line); background: rgba(255,255,255,.03); }
-  .btn-ghost:hover { border-color: var(--purple); }
   .btn svg { width: 16px; height: 16px; }
 
   /* Robot arm "viewport" */
   .arm-frame { position: relative; aspect-ratio: 1; border-radius: 24px; border: 1px solid var(--line);
     background: radial-gradient(circle at 50% 60%, rgba(77,141,255,.12), rgba(10,12,30,.4) 70%); overflow: hidden; }
   .arm-frame canvas { width: 100%; height: 100%; display: block; }
-  .scene { position: absolute; inset: 0; opacity: 0; transition: opacity .9s ease; pointer-events: none; }
-  .scene.active { opacity: 1; }
-  .scene-tabs { position: absolute; bottom: 12px; right: 12px; display: flex; gap: 4px; padding: 4px; border-radius: 999px;
-    background: rgba(10,12,30,.7); border: 1px solid var(--line); backdrop-filter: blur(8px); z-index: 2; }
-  .scene-tabs button { font: inherit; font-size: 11px; letter-spacing: .04em; color: var(--muted); background: none; border: 0;
-    padding: 5px 11px; border-radius: 999px; cursor: pointer; transition: .2s; }
-  .scene-tabs button:hover { color: var(--ink); }
-  .scene-tabs button.on { color: #fff; background: var(--grad); }
   .hud { position: absolute; font-size: 11px; color: var(--muted); letter-spacing: .06em; }
   .hud.tl { top: 14px; left: 16px; } .hud.tr { top: 14px; right: 16px; text-align: right; } .hud.bl { bottom: 14px; left: 16px; }
   .hud b { color: var(--cyan); font-weight: 500; }
   .hud.joints { display: grid; grid-template-columns: auto auto; column-gap: 14px; row-gap: 1px; }
   .hud.joints b { display: inline-block; min-width: 52px; text-align: right; font-variant-numeric: tabular-nums; }
-  .portrait-chip { position: absolute; bottom: 14px; right: 14px; display: flex; align-items: center; gap: 10px;
-    background: rgba(10,12,30,.75); border: 1px solid var(--line); border-radius: 999px; padding: 5px 14px 5px 5px; backdrop-filter: blur(8px); }
-  .portrait-chip img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; object-position: 50% 30%; border: 2px solid var(--purple); }
-  .portrait-chip span { font-size: 12px; line-height: 1.3; }
-  .portrait-chip small { color: var(--muted); display: block; }
-  @media (max-width: 860px) { .hero-grid { grid-template-columns: 1fr; } .arm-frame { max-width: 440px; } }
 
   /* About / portrait */
   .about-grid { display: grid; grid-template-columns: 260px 1fr; gap: 56px; align-items: center; }
@@ -291,24 +282,24 @@
 
 <header class="hero" id="top">
   <div class="hero-bg" aria-hidden="true"></div>
-  <div class="wrap hero-grid">
-    <div>
+  <div class="wrap hero-stack">
+    <div class="hero-text">
       <div class="eyebrow mono"><span class="dot"></span>Cybernetics &amp; Robotics · NTNU</div>
-      <h1><span class="line">Mert</span><span class="line grad-text">Sarikaya</span></h1>
+      <h1><span class="line">Mert</span> <span class="line grad-text">Sarikaya</span></h1>
       <div class="role mono">&gt; <span class="typed" id="typed"></span></div>
       <p class="lead">MSc student specializing in navigation and vessel control. I build perception and control systems for robots and autonomous vessels with ROS&nbsp;2, C++ and Python.</p>
       <div class="actions">
-        <a class="btn btn-primary" href="assets/Mert_Sarikaya_CV.pdf" download>
+        <a class="btn" href="assets/Mert_Sarikaya_CV.pdf" download>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
           Download CV
         </a>
-        <a class="btn btn-ghost" href="https://www.linkedin.com/in/mert-sarikaya-67550824b/" target="_blank" rel="noopener">LinkedIn</a>
-        <a class="btn btn-ghost" href="#contact">Contact</a>
+        <a class="btn" href="https://www.linkedin.com/in/mert-sarikaya-67550824b/" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn" href="#contact">Contact</a>
       </div>
     </div>
 
-    <div class="arm-frame panel" id="sim">
-      <div class="scene active" data-scene="arm">
+    <div class="sims">
+      <div class="arm-frame panel">
         <canvas id="arm" aria-label="Animated six-axis robot arm with a wrist-mounted depth camera scanning cylinders on a table"></canvas>
         <div class="hud tl mono">6-DOF MANIPULATOR<br>RGB-D CAMERA · 87°×58° FOV</div>
         <div class="hud tr mono joints">
@@ -318,7 +309,7 @@
         </div>
         <div class="hud bl mono">POINT CLOUD · <b id="npts">0</b> pts</div>
       </div>
-      <div class="scene" data-scene="dp">
+      <div class="arm-frame panel">
         <canvas id="dp" aria-label="Animated top-down view of a ship holding its position with dynamic positioning against wind, waves and current"></canvas>
         <div class="hud tl mono">DYNAMIC POSITIONING<br>STATION KEEPING · PID</div>
         <div class="hud tr mono joints">
@@ -326,10 +317,6 @@
           <span>E err <b id="dpE">0.00 m</b></span><span>thrust <b id="dpT">0 %</b></span>
         </div>
         <div class="hud bl mono"><span style="color:#d16bff">━</span> ENVIRONMENT &nbsp;<span style="color:#5ee0ff">━</span> THRUSTERS</div>
-      </div>
-      <div class="scene-tabs mono" role="tablist">
-        <button class="on" data-go="arm" role="tab">Manipulator</button>
-        <button data-go="dp" role="tab">DP vessel</button>
       </div>
     </div>
   </div>
@@ -548,8 +535,8 @@
     <h2 style="position:relative">Contact</h2>
     <p style="position:relative">Open to internships, summer jobs and thesis collaborations in robotics and marine autonomy.</p>
     <div class="actions">
-      <a class="btn btn-primary" href="mailto:mertcansarikaya04@gmail.com">Email me</a>
-      <a class="btn btn-ghost" href="https://www.linkedin.com/in/mert-sarikaya-67550824b/" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn" href="mailto:mertcansarikaya04@gmail.com">Email me</a>
+      <a class="btn" href="https://www.linkedin.com/in/mert-sarikaya-67550824b/" target="_blank" rel="noopener">LinkedIn</a>
     </div>
   </div>
 </main>
@@ -855,7 +842,7 @@ const DPR = Math.min(window.devicePixelRatio || 1, 2);
   function draw(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     env = step(dt);
-    const active = c.closest('.scene').classList.contains('active');
+    const active = true;
     if (active) render();
     if (!reduce) requestAnimationFrame(draw);
   }
@@ -948,20 +935,6 @@ const DPR = Math.min(window.devicePixelRatio || 1, 2);
 
   if (reduce) { for (let i = 0; i < 600; i++) step(1 / 60); env = step(1 / 60); render(); }
   else requestAnimationFrame(t0 => { last = t0; requestAnimationFrame(draw); });
-})();
-
-/* ---------- Scene tabs: manipulator / DP vessel ---------- */
-(() => {
-  const sim = document.getElementById('sim');
-  const scenes = sim.querySelectorAll('.scene'), tabs = sim.querySelectorAll('.scene-tabs button');
-  let cur = 'arm';
-  const show = name => {
-    cur = name;
-    scenes.forEach(s => s.classList.toggle('active', s.dataset.scene === name));
-    tabs.forEach(b => { b.classList.toggle('on', b.dataset.go === name); b.setAttribute('aria-selected', b.dataset.go === name); });
-  };
-  let auto = reduce ? null : setInterval(() => show(cur === 'arm' ? 'dp' : 'arm'), 12000);
-  tabs.forEach(b => b.addEventListener('click', () => { clearInterval(auto); auto = null; show(b.dataset.go); }));
 })();
 
 /* ---------- Photo slideshows in project cards ---------- */
