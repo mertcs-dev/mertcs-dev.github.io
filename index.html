@@ -98,6 +98,24 @@
   .portrait-chip small { color: var(--muted); display: block; }
   @media (max-width: 860px) { .hero-grid { grid-template-columns: 1fr; } .arm-frame { max-width: 440px; } }
 
+  /* About / portrait */
+  .about-grid { display: grid; grid-template-columns: 360px 1fr; gap: 48px; align-items: center; }
+  @media (max-width: 860px) { .about-grid { grid-template-columns: 1fr; gap: 32px; } }
+  .portrait-wrap { position: relative; width: 100%; max-width: 360px; aspect-ratio: 4 / 5; margin: 0 auto; }
+  .portrait-wrap::before { content: ""; position: absolute; inset: -3px; border-radius: 26px; background: var(--grad); background-size: 300% 300%;
+    animation: border-flow 8s ease infinite; filter: blur(0); }
+  .portrait-wrap::after { content: ""; position: absolute; inset: -30px; border-radius: 40px; background: var(--grad); opacity: .25; filter: blur(40px); z-index: -1; }
+  @keyframes border-flow { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+  .portrait-wrap img { position: relative; width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; border-radius: 24px; display: block; }
+  .portrait-wrap .ring { position: absolute; left: 50%; top: 50%; width: 125%; aspect-ratio: 1; transform: translate(-50%, -50%); border: 1px dashed rgba(157,107,255,.35); border-radius: 50%; pointer-events: none; animation: spin-c 30s linear infinite; }
+  .portrait-wrap .ring::before { content: ""; position: absolute; top: -5px; left: 50%; width: 10px; height: 10px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 16px var(--cyan); }
+  @keyframes spin-c { to { transform: translate(-50%, -50%) rotate(360deg); } }
+  .about-text p { color: #c7cdf0; font-size: 17px; margin-bottom: 14px; }
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 22px; }
+  .fact { padding: 16px; }
+  .fact b { display: block; font-family: "Orbitron", sans-serif; font-size: 22px; }
+  .fact span { font-size: 13px; color: var(--muted); }
+
   .scroll-hint { margin-top: 50px; display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 12px; }
   .mouse { width: 20px; height: 32px; border: 2px solid var(--muted); border-radius: 12px; position: relative; }
   .mouse::after { content: ""; position: absolute; left: 50%; top: 6px; width: 3px; height: 6px; background: var(--cyan); border-radius: 2px; transform: translateX(-50%); animation: wheel 1.6s infinite; }
@@ -210,6 +228,7 @@
 <nav>
   <a class="brand grad-text" href="#top">M.SARIKAYA</a>
   <ul>
+    <li><a href="#about">About</a></li>
     <li><a href="#loop">Control</a></li>
     <li><a href="#experience">Experience</a></li>
     <li><a href="#projects">Projects</a></li>
@@ -251,8 +270,27 @@
 
 <main class="wrap">
 
+  <section id="about" class="reveal">
+    <div class="section-head"><div class="num mono">00 / ABOUT</div><h2>Hi, I'm Mert</h2></div>
+    <div class="about-grid">
+      <div class="portrait-wrap">
+        <div class="ring"></div>
+        <img src="assets/photo.jpg" alt="Portrait of Mert Sarikaya">
+      </div>
+      <div class="about-text">
+        <p>I'm an MSc student in Cybernetics and Robotics at NTNU in Trondheim, specializing in navigation and vessel control.</p>
+        <p>I like working where software meets hardware: perception pipelines, controllers and state estimators that run on real robots. In my bachelor thesis at SINTEF Ocean, I built a ROS&nbsp;2 system that lets a robot arm see and handle kelp seedlings, and at Vortex NTNU I worked on autonomy for underwater and surface vehicles.</p>
+        <div class="facts">
+          <div class="fact panel"><b class="grad-text">3×</b><span>Teaching assistant at NTNU</span></div>
+          <div class="fact panel"><b class="grad-text">4</b><span>Languages spoken</span></div>
+          <div class="fact panel"><b class="grad-text">ROS 2</b><span>C++ · Python</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section id="loop" class="reveal">
-    <div class="section-head"><div class="num mono">00 / CLOSING THE LOOP</div><h2>What I work on</h2></div>
+    <div class="section-head"><div class="num mono">01 / CLOSING THE LOOP</div><h2>What I work on</h2></div>
     <div class="loop-grid">
       <div class="loop-diagram panel">
         <svg viewBox="0 0 560 230" role="img" aria-label="Feedback control loop: reference, error, controller, plant, output, and sensor feedback">
@@ -311,7 +349,7 @@
   </section>
 
   <section id="experience" class="reveal">
-    <div class="section-head"><div class="num mono">01 / EXPERIENCE</div><h2>Where I've worked</h2></div>
+    <div class="section-head"><div class="num mono">02 / EXPERIENCE</div><h2>Where I've worked</h2></div>
     <div class="timeline">
       <div class="item panel">
         <div class="when mono">01.2026 – 05.2026</div>
@@ -351,7 +389,7 @@
   </section>
 
   <section id="projects" class="reveal">
-    <div class="section-head"><div class="num mono">02 / PROJECTS</div><h2>Things I've built</h2></div>
+    <div class="section-head"><div class="num mono">03 / PROJECTS</div><h2>Things I've built</h2></div>
     <div class="grid stagger">
       <article class="card panel">
         <div class="art">
@@ -435,7 +473,7 @@
   </section>
 
   <section id="education" class="reveal">
-    <div class="section-head"><div class="num mono">03 / EDUCATION</div><h2>NTNU, Trondheim</h2></div>
+    <div class="section-head"><div class="num mono">04 / EDUCATION</div><h2>NTNU, Trondheim</h2></div>
     <div class="edu">
       <div class="edu-card panel">
         <div class="edu-top">
@@ -448,7 +486,7 @@
         <div class="course-label">Current coursework</div>
         <div class="chips"><span class="chip">Linear System Theory</span><span class="chip">Digital Signal Processing</span><span class="chip">Algorithms and Data Structures</span></div>
         <div class="course-label">Planned</div>
-        <div class="chips"><span class="chip planned">Optimization and Control (MPC)</span><span class="chip planned">Real-Time Programming</span><span class="chip planned">Guidance, Navigation and Control</span></div>
+        <div class="chips"><span class="chip planned">Optimization and Control (MPC)</span><span class="chip planned">Real-Time Programming</span><span class="chip planned">Guidance, Navigation and Control</span><span class="chip planned">Artificial Intelligence</span><span class="chip planned">Machine Learning</span><span class="chip planned">Sensor Fusion</span></div>
       </div>
       <div class="edu-card panel">
         <div class="edu-top">
@@ -470,7 +508,7 @@
   </section>
 
   <section id="skills" class="reveal">
-    <div class="section-head"><div class="num mono">04 / SKILLS</div><h2>Toolbox</h2></div>
+    <div class="section-head"><div class="num mono">05 / SKILLS</div><h2>Toolbox</h2></div>
     <div class="skills stagger">
       <div class="skill-group panel"><h3>Programming</h3>
         <div class="tags"><span class="tag">C++</span><span class="tag">C</span><span class="tag">Python</span><span class="tag">MATLAB</span><span class="tag">PLC (FBD, Ladder)</span></div></div>
@@ -489,7 +527,7 @@
 
   <div id="contact" class="contact panel reveal">
     <div class="orbit"></div><div class="orbit o2"></div>
-    <div class="num mono" style="color:var(--purple);font-size:13px;letter-spacing:.15em;position:relative">05 / CONTACT</div>
+    <div class="num mono" style="color:var(--purple);font-size:13px;letter-spacing:.15em;position:relative">06 / CONTACT</div>
     <h2 style="position:relative">Let's <span class="grad-text">close the loop</span>.</h2>
     <p style="position:relative">Open to internships, summer jobs and thesis collaborations in robotics and marine autonomy.</p>
     <div class="actions">
