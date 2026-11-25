@@ -53,14 +53,25 @@
     background: rgba(10, 12, 30, .6); backdrop-filter: blur(14px); border: 1px solid var(--line);
     border-radius: 999px; padding: 8px 10px 8px 20px; display: flex; align-items: center; gap: 18px;
     width: min(760px, calc(100% - 32px)); justify-content: space-between; }
-  nav .brand { font-family: "Orbitron", sans-serif; font-weight: 800; text-decoration: none; font-size: 15px; letter-spacing: .08em; }
+  nav .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 600; font-size: 15px; letter-spacing: -0.01em; }
+  nav .brand .mono-badge { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; background: var(--grad); color: #fff; font-family: "Orbitron", sans-serif; font-size: 11px; font-weight: 800; letter-spacing: .04em; }
   nav ul { list-style: none; display: flex; gap: 4px; }
   nav ul a { text-decoration: none; color: var(--muted); font-size: 14px; padding: 6px 12px; border-radius: 999px; transition: .2s; }
   nav ul a:hover, nav ul a.active { color: var(--ink); background: rgba(157,107,255,.18); }
   @media (max-width: 720px) { nav ul { display: none; } }
 
   /* Hero */
-  .hero { min-height: 100vh; display: grid; align-items: center; padding: 120px 0 60px; }
+  .hero { position: relative; min-height: 100vh; display: grid; align-items: center; padding: 120px 0 60px; }
+  .hero-bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden;
+    -webkit-mask: linear-gradient(#000 50%, transparent); mask: linear-gradient(#000 50%, transparent); }
+  .hero-bg::before { content: ""; position: absolute; inset: 0;
+    background: url(assets/ntnu-building.webp) center 35% / cover no-repeat;
+    opacity: .5; filter: saturate(.55) brightness(.9);
+    animation: kenburns 30s ease-in-out infinite alternate; }
+  .hero-bg::after { content: ""; position: absolute; inset: 0;
+    background: linear-gradient(90deg, rgba(5,6,15,.95) 0%, rgba(5,6,15,.6) 45%, rgba(5,6,15,.3) 100%),
+                linear-gradient(rgba(5,6,15,.5), transparent 30%); }
+  @keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.08); } }
   .hero-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; }
   .eyebrow { font-size: 13px; letter-spacing: .18em; text-transform: uppercase; color: var(--cyan); display: flex; align-items: center; gap: 10px; }
   .eyebrow .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); animation: pulse 2s infinite; }
@@ -115,6 +126,9 @@
   .about-text p { color: #c7cdf0; font-size: 17px; margin-bottom: 14px; }
   .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 22px; }
   .fact { padding: 16px; }
+  .portrait-col { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  .location { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); letter-spacing: .04em; }
+  .location svg { width: 16px; height: 16px; color: var(--cyan); }
   .fact b { display: block; font-family: "Orbitron", sans-serif; font-size: 22px; }
   .fact span { font-size: 13px; color: var(--muted); }
 
@@ -174,7 +188,10 @@
   /* Timeline */
   .timeline { position: relative; padding-left: 34px; }
   .timeline::before { content: ""; position: absolute; left: 9px; top: 6px; bottom: 6px; width: 2px; background: linear-gradient(var(--cyan), var(--purple), transparent); }
-  .item { position: relative; margin-bottom: 22px; padding: 22px 24px; }
+  .item { position: relative; margin-bottom: 22px; padding: 22px 100px 22px 24px; }
+  .item > .logo, .edu-card > .logo { position: absolute; top: 22px; width: 56px; height: 56px; border-radius: 12px; object-fit: cover; border: 1px solid var(--line); box-shadow: 0 6px 20px rgba(0,0,0,.35); }
+  .item > .logo { right: 24px; }
+  @media (max-width: 600px) { .item { padding-right: 24px; } .item > .logo { position: static; width: 44px; height: 44px; margin-bottom: 10px; display: block; } }
   .item::before { content: ""; position: absolute; left: -31px; top: 28px; width: 14px; height: 14px; border-radius: 50%;
     background: var(--bg); border: 2px solid var(--cyan); box-shadow: 0 0 14px var(--cyan); }
   .item.minor::before { border-color: var(--muted); box-shadow: none; }
@@ -188,7 +205,20 @@
     background: rgba(77,141,255,.1); color: #a9c4ff; border: 1px solid rgba(77,141,255,.25); }
 
   /* Projects */
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 18px; }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+  .card.wide { grid-column: 1 / -1; display: grid; grid-template-columns: 0.8fr 1.2fr; }
+  .card.wide .art { height: auto; min-height: 260px; border-bottom: 0; border-right: 1px solid var(--line); display: grid; place-items: center; }
+  .card.wide .art svg { height: auto; max-height: 320px; }
+  .card.wide .body { padding: 26px 28px; }
+  .card.wide h3 { font-size: 21px; margin-bottom: 10px; }
+  .card.wide p { color: #c7cdf0; }
+  .card.wide .spec { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 6px; }
+  .card.wide .spec ol, .card.wide .spec ul { margin-top: 8px; padding-left: 18px; font-size: 14px; color: #c7cdf0; }
+  .card.wide .spec li { margin-bottom: 6px; } .card.wide .spec li::marker { color: var(--purple); }
+  .card.wide .spec b { color: var(--ink); font-weight: 600; }
+  .card.wide .note { margin-top: 14px; font-size: 14px; color: var(--muted); }
+  @media (max-width: 860px) { .card.wide { grid-template-columns: 1fr; } .card.wide .art { border-right: 0; border-bottom: 1px solid var(--line); min-height: 200px; } .card.wide .spec { grid-template-columns: 1fr; } }
   .card { position: relative; padding: 0; overflow: hidden; transition: transform .3s; transform-style: preserve-3d; }
   .card::after { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
     background: radial-gradient(300px circle at var(--mx, 50%) var(--my, 50%), rgba(157,107,255,.8), transparent 60%);
@@ -203,7 +233,9 @@
 
   /* Education */
   .edu { display: grid; gap: 18px; }
-  .edu-card { padding: 26px; }
+  .edu-card { position: relative; padding: 26px 26px 26px 106px; }
+  .edu-card > .logo { left: 26px; top: 26px; }
+  @media (max-width: 600px) { .edu-card { padding-left: 26px; } .edu-card > .logo { position: static; width: 44px; height: 44px; margin-bottom: 12px; display: block; } }
   .edu-top { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
   .edu-card h3 { font-size: 20px; font-weight: 600; }
   .edu-card .sub { color: var(--muted); }
@@ -252,7 +284,7 @@
 <div class="nebula" aria-hidden="true"></div>
 
 <nav>
-  <a class="brand grad-text" href="#top">M.SARIKAYA</a>
+  <a class="brand" href="#top"><span class="mono-badge">MS</span>Mert Sarikaya</a>
   <ul>
     <li><a href="#about">About</a></li>
     <li><a href="#experience">Experience</a></li>
@@ -263,6 +295,7 @@
 </nav>
 
 <header class="hero" id="top">
+  <div class="hero-bg" aria-hidden="true"></div>
   <div class="wrap hero-grid">
     <div>
       <div class="eyebrow mono"><span class="dot"></span>Cybernetics &amp; Robotics · NTNU</div>
@@ -297,9 +330,15 @@
   <section id="about" class="reveal">
     <div class="section-head"><h2>About</h2></div>
     <div class="about-grid">
-      <div class="portrait-wrap">
-        <div class="ring"></div>
-        <img src="assets/photo.jpg" alt="Portrait of Mert Sarikaya">
+      <div class="portrait-col">
+        <div class="portrait-wrap">
+          <div class="ring"></div>
+          <img src="assets/photo.jpg" alt="Portrait of Mert Sarikaya">
+        </div>
+        <div class="location mono">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+          Trondheim · Drammen, Norway
+        </div>
       </div>
       <div class="about-text">
         <p>I'm an MSc student in Cybernetics and Robotics at NTNU in Trondheim, specializing in navigation and vessel control.</p>
@@ -307,7 +346,6 @@
         <div class="facts">
           <div class="fact panel"><b class="grad-text">3×</b><span>Teaching assistant at NTNU</span></div>
           <div class="fact panel"><b class="grad-text">4</b><span>Languages spoken</span></div>
-          <div class="fact panel"><b class="grad-text">ROS 2</b><span>C++ · Python</span></div>
         </div>
       </div>
     </div>
@@ -325,6 +363,7 @@
     <div class="section-head"><h2>Experience</h2></div>
     <div class="timeline">
       <div class="item panel">
+        <img class="logo" src="assets/logo-sintef.png" alt="SINTEF logo">
         <div class="when mono">01.2026 – 05.2026</div>
         <h3>Student Researcher <span class="org">· SINTEF Ocean / NTNU</span></h3>
         <div class="org" style="font-size:14px">Bachelor thesis: RI Seaweed project</div>
@@ -337,6 +376,7 @@
         <div class="item-links"><a href="assets/Bachelor_Thesis_RI_Seaweed.pdf" target="_blank" rel="noopener">Read the bachelor thesis (PDF) →</a></div>
       </div>
       <div class="item panel">
+        <img class="logo" src="assets/logo-ntnu.png" alt="NTNU logo">
         <div class="when mono">2024 · 2025 · 2026</div>
         <h3>Teaching Assistant <span class="org">· NTNU</span></h3>
         <div class="org" style="font-size:14px">Renewable Energy Informatics, three years in a row</div>
@@ -347,6 +387,7 @@
         <div class="tags"><span class="tag">Python</span><span class="tag">pandas</span><span class="tag">Raspberry Pi</span><span class="tag">RapidMiner</span></div>
       </div>
       <div class="item panel">
+        <img class="logo" src="assets/logo-vortex.png" alt="Vortex NTNU logo">
         <div class="when mono">02.2025 – 06.2025</div>
         <h3>Autonomy Team Member <span class="org">· Vortex NTNU</span></h3>
         <ul>
@@ -356,6 +397,7 @@
         <div class="tags"><span class="tag">ROS 2</span><span class="tag">C++</span><span class="tag">Python</span><span class="tag">Linux</span><span class="tag">Git</span></div>
       </div>
       <div class="item panel minor">
+        <img class="logo" src="assets/logo-kiwi.png" alt="Kiwi logo">
         <div class="when mono">11.2022 – 05.2023</div>
         <h3>Salesclerk <span class="org">· Kiwi Buskerud</span></h3>
       </div>
@@ -375,31 +417,6 @@
           <h3>Helicopter Lab</h3>
           <p>LQR controller with a Kalman filter for state estimation, controlling a physical lab helicopter in MATLAB and Simulink. <span class="mono" style="font-size:12px">TTK4115</span></p>
           <div class="tags"><span class="tag">LQR</span><span class="tag">Kalman</span><span class="tag">Simulink</span></div>
-        </div>
-      </article>
-
-      <article class="card panel">
-        <div class="art">
-          <!-- ESP32 + moisture + drops -->
-          <svg viewBox="0 0 300 150">
-            <rect x="30" y="50" width="70" height="50" rx="6" fill="#0e1230" stroke="#4d8dff"/>
-            <text x="65" y="80" text-anchor="middle" fill="#a9c4ff" font-family="JetBrains Mono" font-size="11">ESP32</text>
-            <circle cx="92" cy="58" r="3" fill="#5ee0ff"><animate attributeName="opacity" values="1;.2;1" dur="1s" repeatCount="indefinite"/></circle>
-            <path d="M100 75 H160 V40 H220" fill="none" stroke="#8f97c4" stroke-dasharray="4 4"><animate attributeName="stroke-dashoffset" from="16" to="0" dur=".6s" repeatCount="indefinite"/></path>
-            <path d="M220 32 h20 v16 h-20z" fill="#9d6bff"/>
-            <g fill="#5ee0ff">
-              <path d="M230 55 q4 7 0 10 q-4-3 0-10z"><animateTransform attributeName="transform" type="translate" values="0 0; 0 45" dur="1.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="1.2s" repeatCount="indefinite"/></path>
-              <path d="M230 55 q4 7 0 10 q-4-3 0-10z"><animateTransform attributeName="transform" type="translate" values="0 0; 0 45" dur="1.2s" begin=".6s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="1.2s" begin=".6s" repeatCount="indefinite"/></path>
-            </g>
-            <path d="M205 120 q25 -30 50 0z" fill="#1d2a4f"/>
-            <path d="M230 112 v-12 M230 104 q-10 -10 -14 -4 M230 102 q10 -12 14 -6" stroke="#6fdc9b" stroke-width="2" fill="none"/>
-            <rect x="200" y="120" width="60" height="16" rx="3" fill="#2a2f5c"/>
-          </svg>
-        </div>
-        <div class="body">
-          <h3>Automatic Plant Watering</h3>
-          <p>ESP32 reads soil moisture sensors and drives a pump through a MOSFET and relay to water the plants when the soil is dry.</p>
-          <div class="tags"><span class="tag">ESP32</span><span class="tag">Embedded</span><span class="tag">Sensors</span></div>
         </div>
       </article>
 
@@ -431,6 +448,54 @@
           <div class="tags"><span class="tag">PLC</span><span class="tag">SCADA</span><span class="tag">Modbus</span></div>
         </div>
       </article>
+
+      <article class="card panel wide">
+        <div class="art">
+          <!-- ESP32 + moisture + drops -->
+          <svg viewBox="0 0 300 150">
+            <rect x="30" y="50" width="70" height="50" rx="6" fill="#0e1230" stroke="#4d8dff"/>
+            <text x="65" y="80" text-anchor="middle" fill="#a9c4ff" font-family="JetBrains Mono" font-size="11">ESP32</text>
+            <circle cx="92" cy="58" r="3" fill="#5ee0ff"><animate attributeName="opacity" values="1;.2;1" dur="1s" repeatCount="indefinite"/></circle>
+            <path d="M100 75 H160 V40 H220" fill="none" stroke="#8f97c4" stroke-dasharray="4 4"><animate attributeName="stroke-dashoffset" from="16" to="0" dur=".6s" repeatCount="indefinite"/></path>
+            <path d="M220 32 h20 v16 h-20z" fill="#9d6bff"/>
+            <g fill="#5ee0ff">
+              <path d="M230 55 q4 7 0 10 q-4-3 0-10z"><animateTransform attributeName="transform" type="translate" values="0 0; 0 45" dur="1.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="1.2s" repeatCount="indefinite"/></path>
+              <path d="M230 55 q4 7 0 10 q-4-3 0-10z"><animateTransform attributeName="transform" type="translate" values="0 0; 0 45" dur="1.2s" begin=".6s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="1.2s" begin=".6s" repeatCount="indefinite"/></path>
+            </g>
+            <path d="M205 120 q25 -30 50 0z" fill="#1d2a4f"/>
+            <path d="M230 112 v-12 M230 104 q-10 -10 -14 -4 M230 102 q10 -12 14 -6" stroke="#6fdc9b" stroke-width="2" fill="none"/>
+            <rect x="200" y="120" width="60" height="16" rx="3" fill="#2a2f5c"/>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>Automatic Plant Watering System</h3>
+          <p>A soil-moisture controlled watering system built on an ESP32, made in Microlabs, an open-source project at NTNU's Department of Engineering Cybernetics (ITK) for hands-on, student-active learning in TTK4225. The ESP32 reads a moisture sensor through its analog input and switches a small DC pump on when the soil gets too dry, then off again once it is wet enough. It is a simple on/off (bang-bang) controller, with sensor, logic and actuator all running on one microcontroller.</p>
+          <div class="spec">
+            <div>
+              <div class="course-label">How it works</div>
+              <ol>
+                <li><b>Sense:</b> a capacitive or resistive moisture probe is sampled through the ESP32's ADC every 200&nbsp;ms.</li>
+                <li><b>Decide:</b> the reading is compared to a calibrated threshold. Dry soil gives a higher reading.</li>
+                <li><b>Act:</b> a GPIO pin drives a relay or a logic-level MOSFET that powers the pump, with a flyback diode protecting the circuit from voltage spikes when the motor switches off.</li>
+              </ol>
+            </div>
+            <div>
+              <div class="course-label">Components</div>
+              <ul>
+                <li>ESP32 dev board (NodeMCU-32S compatible)</li>
+                <li>Capacitive and resistive soil moisture sensors</li>
+                <li>3&nbsp;V DC submersible pump</li>
+                <li>Power relay or IRLZ44N logic-level MOSFET</li>
+                <li>1N4001 flyback diode</li>
+                <li>Breadboard prototype, then soldered perfboard</li>
+              </ul>
+            </div>
+          </div>
+          <p class="note">Firmware written in C++ with the Arduino framework, built and flashed with PlatformIO in VS Code. Natural next steps are logging and plotting moisture over time, a Home Assistant dashboard, and a water reservoir level sensor.</p>
+          <div class="tags"><span class="tag">ESP32</span><span class="tag">C++</span><span class="tag">PlatformIO</span><span class="tag">ADC</span><span class="tag">MOSFET / relay</span><span class="tag">Sensors</span></div>
+          <div class="card-links"><a href="https://github.com/Microlabs-Project-ITK-NTNU/Plants-watering-system" target="_blank" rel="noopener">View on GitHub →</a></div>
+        </div>
+      </article>
     </div>
   </section>
 
@@ -438,6 +503,7 @@
     <div class="section-head"><h2>Education</h2></div>
     <div class="edu">
       <div class="edu-card panel">
+        <img class="logo" src="assets/logo-ntnu.png" alt="NTNU logo">
         <div class="edu-top">
           <div>
             <h3>MSc, Cybernetics and Robotics <span class="badge">Current</span></h3>
@@ -451,6 +517,7 @@
         <div class="chips"><span class="chip planned">Optimization and Control (MPC)</span><span class="chip planned">Real-Time Programming</span><span class="chip planned">Guidance, Navigation and Control</span><span class="chip planned">Artificial Intelligence</span><span class="chip planned">Machine Learning</span><span class="chip planned">Sensor Fusion</span></div>
       </div>
       <div class="edu-card panel">
+        <img class="logo" src="assets/logo-ntnu.png" alt="NTNU logo">
         <div class="edu-top">
           <div>
             <h3>BSc, Automation and Intelligent Systems</h3>
@@ -498,7 +565,7 @@
   </div>
 </main>
 
-<footer class="mono">© 2026 MERT SARIKAYA · TRONDHEIM, NORWAY</footer>
+<footer class="mono">© 2026 MERT SARIKAYA · TRONDHEIM &amp; DRAMMEN, NORWAY</footer>
 
 <script>
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
