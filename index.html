@@ -7,7 +7,7 @@
 <meta name="description" content="Mert Sarikaya — MSc student in Cybernetics and Robotics at NTNU, specializing in navigation and vessel control.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #05060f;
@@ -101,9 +101,9 @@
   @media (max-width: 860px) { .hero-grid { grid-template-columns: 1fr; } .arm-frame { max-width: 440px; } }
 
   /* About / portrait */
-  .about-grid { display: grid; grid-template-columns: 360px 1fr; gap: 48px; align-items: center; }
+  .about-grid { display: grid; grid-template-columns: 260px 1fr; gap: 56px; align-items: center; }
   @media (max-width: 860px) { .about-grid { grid-template-columns: 1fr; gap: 32px; } }
-  .portrait-wrap { position: relative; width: 100%; max-width: 360px; aspect-ratio: 4 / 5; margin: 0 auto; }
+  .portrait-wrap { position: relative; width: 100%; max-width: 260px; aspect-ratio: 4 / 5; margin: 0 auto; }
   .portrait-wrap::before { content: ""; position: absolute; inset: -3px; border-radius: 26px; background: var(--grad); background-size: 300% 300%;
     animation: border-flow 8s ease infinite; filter: blur(0); }
   .portrait-wrap::after { content: ""; position: absolute; inset: -30px; border-radius: 40px; background: var(--grad); opacity: .25; filter: blur(40px); z-index: -1; }
@@ -117,6 +117,27 @@
   .fact { padding: 16px; }
   .fact b { display: block; font-family: "Orbitron", sans-serif; font-size: 22px; }
   .fact span { font-size: 13px; color: var(--muted); }
+
+  /* Quote with aurora */
+  .quote-section { position: relative; width: 100vw; margin-left: calc(50% - 50vw); margin-top: 40px; min-height: 64vh;
+    display: grid; place-items: center; padding: 90px 24px; overflow: hidden; }
+  #aurora { position: absolute; inset: 0; width: 100%; height: 100%; filter: blur(16px) saturate(1.3); opacity: .85;
+    -webkit-mask: linear-gradient(transparent, #000 22%, #000 70%, transparent); mask: linear-gradient(transparent, #000 22%, #000 70%, transparent); }
+  .quote { position: relative; text-align: center; max-width: 980px; }
+  .quote blockquote { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400;
+    font-size: clamp(40px, 7vw, 96px); line-height: 1.05; letter-spacing: -0.01em; color: #f3f1ff; }
+  .quote blockquote .w { display: inline-block; opacity: 0; filter: blur(14px); transform: translateY(24px);
+    transition: opacity 1.1s ease, filter 1.1s ease, transform 1.1s cubic-bezier(.2,.8,.2,1);
+    text-shadow: 0 0 24px rgba(157,107,255,.55), 0 0 60px rgba(94,224,255,.35); }
+  .quote.in blockquote .w { opacity: 1; filter: blur(0); transform: none; }
+  .quote blockquote .w.hl { background: linear-gradient(100deg, #7dfcd2, #5ee0ff 35%, #9d6bff 70%, #e7a6ff); background-size: 200% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent; animation: shimmer 5s ease-in-out infinite alternate; }
+  @keyframes shimmer { to { background-position: 100% 0; } }
+  .quote figcaption { margin-top: 34px; display: flex; align-items: center; justify-content: center; gap: 16px;
+    font-family: "JetBrains Mono", monospace; font-size: 13px; letter-spacing: .25em; text-transform: uppercase; color: var(--muted);
+    opacity: 0; transition: opacity 1.2s ease 1.4s; }
+  .quote.in figcaption { opacity: 1; }
+  .quote figcaption .line { width: 48px; height: 1px; background: linear-gradient(90deg, transparent, var(--purple), transparent); }
 
   .scroll-hint { margin-top: 50px; display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 12px; }
   .mouse { width: 20px; height: 32px; border: 2px solid var(--muted); border-radius: 12px; position: relative; }
@@ -234,7 +255,6 @@
   <a class="brand grad-text" href="#top">M.SARIKAYA</a>
   <ul>
     <li><a href="#about">About</a></li>
-    <li><a href="#loop">Control</a></li>
     <li><a href="#experience">Experience</a></li>
     <li><a href="#projects">Projects</a></li>
     <li><a href="#education">Education</a></li>
@@ -269,10 +289,6 @@
         <span>θ₃ <b id="th3">0.0°</b></span><span>θ₆ <b id="th6">0.0°</b></span>
       </div>
       <div class="hud bl mono">POINT CLOUD · <b id="npts">0</b> pts</div>
-      <div class="portrait-chip">
-        <img src="assets/photo.jpg" alt="Portrait of Mert Sarikaya">
-        <span>Trondheim, NO<small>Open to internships</small></span>
-      </div>
     </div>
   </div>
 </header>
@@ -298,50 +314,12 @@
     </div>
   </section>
 
-  <section id="loop" class="reveal">
-    <div class="section-head"><h2>Control Systems</h2></div>
-      <div class="loop-diagram panel">
-        <svg viewBox="0 0 560 230" role="img" aria-label="Feedback control loop: reference, error, controller, plant, output, and sensor feedback">
-          <defs>
-            <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#5ee0ff"/><stop offset="1" stop-color="#9d6bff"/></linearGradient>
-            <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8f97c4"/></marker>
-            <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-          </defs>
-          <g fill="none" stroke="#8f97c4" stroke-width="1.5">
-            <path id="p1" d="M20 80 H92" marker-end="url(#ar)"/>
-            <path id="p2" d="M128 80 H180" marker-end="url(#ar)"/>
-            <path id="p3" d="M290 80 H340" marker-end="url(#ar)"/>
-            <path id="p4" d="M450 80 H540" marker-end="url(#ar)"/>
-            <path id="p5" d="M495 80 V180 H360"  marker-end="url(#ar)"/>
-            <path id="p6" d="M260 180 H110 V102" marker-end="url(#ar)"/>
-          </g>
-          <circle cx="110" cy="80" r="18" fill="#0e1230" stroke="url(#g1)" stroke-width="2"/>
-          <text x="110" y="86" text-anchor="middle" fill="#e7ebff" font-size="18" font-family="Inter">Σ</text>
-          <text x="96" y="114" fill="#8f97c4" font-size="13">−</text>
-          <text x="84" y="70" fill="#8f97c4" font-size="13">+</text>
-          <rect x="180" y="55" width="110" height="50" rx="10" fill="#0e1230" stroke="url(#g1)" stroke-width="2"/>
-          <text x="235" y="78" text-anchor="middle" fill="#e7ebff" font-size="14" font-family="Inter" font-weight="600">Controller</text>
-          <text x="235" y="95" text-anchor="middle" fill="#8f97c4" font-size="11" font-family="JetBrains Mono">LQR · MPC · PID</text>
-          <rect x="340" y="55" width="110" height="50" rx="10" fill="#0e1230" stroke="url(#g1)" stroke-width="2"/>
-          <text x="395" y="78" text-anchor="middle" fill="#e7ebff" font-size="14" font-family="Inter" font-weight="600">Plant</text>
-          <text x="395" y="95" text-anchor="middle" fill="#8f97c4" font-size="11" font-family="JetBrains Mono">vessel · robot</text>
-          <rect x="260" y="155" width="100" height="50" rx="10" fill="#0e1230" stroke="url(#g1)" stroke-width="2"/>
-          <text x="310" y="178" text-anchor="middle" fill="#e7ebff" font-size="14" font-family="Inter" font-weight="600">Estimator</text>
-          <text x="310" y="195" text-anchor="middle" fill="#8f97c4" font-size="11" font-family="JetBrains Mono">Kalman · sensors</text>
-          <g font-family="JetBrains Mono" font-size="12" fill="#5ee0ff">
-            <text x="28" y="70">r(t)</text><text x="138" y="70">e</text><text x="305" y="70">u</text><text x="508" y="70">y(t)</text><text x="150" y="172">ŷ</text>
-          </g>
-          <g filter="url(#glow)">
-            <circle r="4" fill="#5ee0ff"><animateMotion dur="1s" repeatCount="indefinite"><mpath href="#p1"/></animateMotion></circle>
-            <circle r="4" fill="#6fa6ff"><animateMotion dur="0.9s" repeatCount="indefinite"><mpath href="#p2"/></animateMotion></circle>
-            <circle r="4" fill="#8a85ff"><animateMotion dur="0.9s" repeatCount="indefinite"><mpath href="#p3"/></animateMotion></circle>
-            <circle r="4" fill="#9d6bff"><animateMotion dur="1.2s" repeatCount="indefinite"><mpath href="#p4"/></animateMotion></circle>
-            <circle r="4" fill="#d16bff"><animateMotion dur="1.6s" repeatCount="indefinite"><mpath href="#p5"/></animateMotion></circle>
-            <circle r="4" fill="#d16bff"><animateMotion dur="1.8s" repeatCount="indefinite"><mpath href="#p6"/></animateMotion></circle>
-          </g>
-        </svg>
-        <div class="caption">A feedback control loop: the estimator combines sensor data, the controller computes the input, and the plant responds. The same structure applies to robot arms and dynamic positioning of vessels.</div>
-      </div>
+  <section id="quote" class="quote-section" aria-label="Quote">
+    <canvas id="aurora" aria-hidden="true"></canvas>
+    <figure class="quote">
+      <blockquote id="quoteText">All models are wrong, but some are useful.</blockquote>
+      <figcaption><span class="line"></span>George E. P. Box<span class="line"></span></figcaption>
+    </figure>
   </section>
 
   <section id="experience" class="reveal">
@@ -788,6 +766,61 @@ document.querySelectorAll('[data-slideshow]').forEach(box => {
   let timer = setInterval(() => go((i + 1) % imgs.length), 4000);
   dots.forEach((d, n) => { d.style.cursor = 'pointer'; d.addEventListener('click', () => { clearInterval(timer); go(n); timer = setInterval(() => go((i + 1) % imgs.length), 4000); }); });
 });
+
+/* ---------- Quote: split into words, highlight key words ---------- */
+(() => {
+  const bq = document.getElementById('quoteText'), fig = bq.closest('.quote');
+  const hl = new Set(['wrong,', 'useful.']);
+  bq.innerHTML = bq.textContent.trim().split(/\s+/).map((w, i) =>
+    `<span class="w${hl.has(w) ? ' hl' : ''}" style="transition-delay:${(i * 0.12).toFixed(2)}s">${w}</span>`).join(' ');
+  new IntersectionObserver(([e], o) => { if (e.isIntersecting) { fig.classList.add('in'); o.disconnect(); } }, { threshold: 0.4 }).observe(fig);
+})();
+
+/* ---------- Aurora borealis behind the quote ---------- */
+(() => {
+  const c = document.getElementById('aurora'), ctx = c.getContext('2d');
+  const RES = 3;                                   // render at 1/3 resolution; CSS blur smooths it
+  let W, H, visible = false, t = Math.random() * 100;
+  const ribbons = [
+    { col: [125, 252, 210], y: 0.52, amp: 0.10, h: 0.42, f: 1.6, sp: 0.18, ph: 0.0, a: 0.55 },
+    { col: [94, 224, 255],  y: 0.46, amp: 0.13, h: 0.36, f: 2.3, sp: -0.13, ph: 2.1, a: 0.45 },
+    { col: [157, 107, 255], y: 0.58, amp: 0.09, h: 0.48, f: 1.2, sp: 0.10, ph: 4.0, a: 0.50 },
+    { col: [209, 107, 255], y: 0.40, amp: 0.07, h: 0.28, f: 3.1, sp: 0.21, ph: 1.3, a: 0.30 }
+  ];
+  function resize() { W = c.width = Math.ceil(c.clientWidth / RES); H = c.height = Math.ceil(c.clientHeight / RES); }
+  function frame() {
+    if (!visible) return;
+    t += 0.006;
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.clearRect(0, 0, W, H);
+    ctx.globalCompositeOperation = 'lighter';
+    for (const r of ribbons) {
+      const [cr, cg, cb] = r.col;
+      const g = ctx.createLinearGradient(0, 0, 0, 1);       // unit gradient, scaled per column
+      g.addColorStop(0, `rgba(${cr},${cg},${cb},0)`);
+      g.addColorStop(0.65, `rgba(${cr},${cg},${cb},${r.a})`);
+      g.addColorStop(0.8, `rgba(255,255,255,${r.a * 0.3})`);
+      g.addColorStop(1, `rgba(${cr},${cg},${cb},0)`);
+      ctx.fillStyle = g;
+      for (let x = 0; x < W; x += 2) {
+        const u = x / W;
+        const wave = Math.sin(u * r.f * 6.283 + t * r.sp * 10 + r.ph) * 0.6 + Math.sin(u * r.f * 13.1 - t * 1.7 + r.ph) * 0.25 + Math.sin(u * 31 + t * 3) * 0.06;
+        const yb = (r.y + r.amp * wave) * H;
+        const curtain = 0.55 + 0.45 * Math.sin(u * 47 + t * 2.3 + r.ph) * Math.sin(u * 9 - t);  // vertical rays
+        const hh = r.h * H * (0.6 + 0.4 * curtain);
+        ctx.setTransform(1, 0, 0, hh, x, yb - hh);
+        ctx.fillRect(0, 0, 2.2, 1);
+      }
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+    }
+    requestAnimationFrame(frame);
+  }
+  resize(); addEventListener('resize', resize);
+  new IntersectionObserver(([e]) => {
+    const was = visible; visible = e.isIntersecting;
+    if (visible && !was) reduce ? (visible = true, frame(), visible = false) : frame();
+  }).observe(c);
+})();
 
 /* ---------- Card spotlight + tilt ---------- */
 document.querySelectorAll('.card').forEach(card => {
