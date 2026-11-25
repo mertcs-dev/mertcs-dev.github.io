@@ -288,9 +288,9 @@
   <div class="wrap hero-stack">
     <div class="hero-text">
       <div class="eyebrow mono"><span class="dot"></span>Cybernetics &amp; Robotics · NTNU</div>
-      <h1><span class="line">Mert</span> <span class="line grad-text">Sarikaya</span></h1>
+      <h1><span class="line">Mert</span> <span class="line">Sarikaya</span></h1>
       <div class="role mono">&gt; <span class="typed" id="typed"></span></div>
-      <p class="lead">MSc student specializing in navigation and vessel control. I build perception and control systems for robots and autonomous vessels with ROS&nbsp;2, C++ and Python.</p>
+      <p class="lead">MSc student in Cybernetics and Robotics at the Norwegian University of Science and Technology (NTNU) in Trondheim, specializing in navigation and vessel control. I build perception and control systems for robots and autonomous vessels with ROS&nbsp;2, C++ and Python. Lately I have been moving into AI, machine learning and data science, and I build full-stack software on the side.</p>
       <div class="actions">
         <a class="btn" href="assets/Mert_Sarikaya_CV.pdf" download>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
@@ -488,6 +488,7 @@
         <div class="edu-top">
           <div>
             <h3>MSc, Cybernetics and Robotics <span class="badge">Current</span></h3>
+            <div class="sub">Norwegian University of Science and Technology (NTNU), Trondheim</div>
             <div class="sub">Specialization: Navigation and Vessel Control</div>
           </div>
           <div class="when mono">08.2026 – 06.2028</div>
@@ -502,6 +503,7 @@
         <div class="edu-top">
           <div>
             <h3>BSc, Automation and Intelligent Systems</h3>
+            <div class="sub">Norwegian University of Science and Technology (NTNU), Trondheim</div>
             <div class="sub">Specialization: Cybernetics and Robotics</div>
           </div>
           <div class="when mono">08.2023 – 06.2026</div>
@@ -592,7 +594,7 @@ const DPR = Math.min(window.devicePixelRatio || 1, 2);
 /* ---------- Typed role ---------- */
 (() => {
   const el = document.getElementById('typed');
-  const words = ['control systems', 'robot perception', 'marine autonomy', 'ROS 2 · C++ · Python', 'state estimation'];
+  const words = ['control systems', 'robot perception', 'marine autonomy', 'AI & machine learning', 'full-stack development'];
   if (reduce) { el.textContent = words[0]; return; }
   let w = 0, i = 0, del = false;
   (function tick() {
