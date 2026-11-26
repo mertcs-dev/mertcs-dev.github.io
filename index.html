@@ -135,8 +135,9 @@
   .fact span { font-size: 13px; color: var(--muted); }
 
   /* Quote with aurora */
-  .quote-section { position: relative; width: 100vw; margin-left: calc(50% - 50vw); margin-top: 40px; min-height: 84vh;
-    display: grid; place-items: center; padding: 130px 24px; overflow: hidden; }
+  .quote-section { position: relative; width: 100vw; margin-left: calc(50% - 50vw); margin-top: 40px;
+    display: flex; flex-direction: column; align-items: center; padding: 20px 24px 90px; overflow: hidden; }
+  .aurora-band { position: relative; width: 100vw; height: clamp(240px, 42vh, 440px); }
   #aurora { position: absolute; inset: 0; width: 100%; height: 100%; filter: blur(13px) saturate(1.4) brightness(.9); opacity: 1;
     -webkit-mask: linear-gradient(transparent, #000 14%, #000 80%, transparent); mask: linear-gradient(transparent, #000 14%, #000 80%, transparent);
     animation: breathe 7s ease-in-out infinite alternate; }
@@ -145,9 +146,9 @@
   .spark { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #fff; opacity: 0;
     box-shadow: 0 0 8px 2px rgba(125,252,210,.8), 0 0 18px 4px rgba(157,107,255,.45); animation: spark-rise linear infinite; }
   @keyframes spark-rise { 0% { opacity: 0; transform: translateY(0) scale(.6); } 15% { opacity: 1; } 70% { opacity: .8; } 100% { opacity: 0; transform: translateY(-160px) scale(1.2); } }
-  .quote { position: relative; isolation: isolate; text-align: center; max-width: 1040px; }
+  .quote { position: relative; isolation: isolate; text-align: center; max-width: 1040px; margin-top: 30px; }
   .quote::before { content: ""; position: absolute; inset: -30% -12%; z-index: -1; border-radius: 50%;
-    background: radial-gradient(ellipse at center, rgba(157,107,255,.42), rgba(94,224,255,.18) 42%, transparent 70%);
+    background: radial-gradient(ellipse at center, rgba(157,107,255,.22), rgba(94,224,255,.08) 45%, transparent 70%);
     filter: blur(40px); animation: halo 8s ease-in-out infinite alternate; }
   @keyframes halo { from { transform: scale(.9); opacity: .55; } to { transform: scale(1.12); opacity: 1; } }
   .quote blockquote { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400;
@@ -206,6 +207,8 @@
   .item { position: relative; margin-bottom: 22px; padding: 22px 112px 22px 24px; }
   .item > .logo, .edu-card > .logo { position: absolute; top: 22px; width: 56px; height: 56px; border-radius: 12px; object-fit: cover; border: 1px solid var(--line); box-shadow: 0 6px 20px rgba(0,0,0,.35); }
   .item > .logo { right: 24px; width: 68px; height: 68px; border-radius: 14px; }
+  .item.minor { min-height: 112px; display: flex; flex-direction: column; justify-content: center; }
+  .item.minor > .logo { top: 50%; transform: translateY(-50%); }
   @media (max-width: 600px) { .item { padding-right: 24px; } .item > .logo { position: static; width: 44px; height: 44px; margin-bottom: 10px; display: block; } }
   .item::before { content: ""; position: absolute; left: -31px; top: 28px; width: 14px; height: 14px; border-radius: 50%;
     background: var(--bg); border: 2px solid var(--cyan); box-shadow: 0 0 14px var(--cyan); }
@@ -367,7 +370,7 @@
   </section>
 
   <section id="quote" class="quote-section" aria-label="Quote">
-    <canvas id="aurora" aria-hidden="true"></canvas>
+    <div class="aurora-band"><canvas id="aurora" aria-hidden="true"></canvas></div>
     <figure class="quote">
       <blockquote id="quoteText">Scientists study the world as it is; engineers create the world that has never been.</blockquote>
       <figcaption><span class="line"></span>Theodore von Kármán<span class="line"></span></figcaption>
@@ -988,7 +991,7 @@ document.querySelectorAll('[data-slideshow]').forEach(box => {
       `animation-duration:${(5 + Math.random() * 7).toFixed(1)}s;animation-delay:${(-Math.random() * 12).toFixed(1)}s`;
     box.appendChild(s);
   }
-  sec.insertBefore(box, sec.querySelector('.quote'));
+  sec.querySelector('.aurora-band').appendChild(box);
 })();
 
 /* ---------- Aurora borealis behind the quote ---------- */
