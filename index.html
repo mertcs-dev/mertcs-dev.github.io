@@ -14,6 +14,9 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Mert Sarikaya, Cybernetics and Robotics at NTNU, over the NTNU main building">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/favicon-64.png" sizes="64x64" type="image/png">
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -68,6 +71,10 @@
   nav ul a { text-decoration: none; color: var(--muted); font-size: 14px; padding: 6px 12px; border-radius: 999px; transition: .2s; }
   nav ul a:hover, nav ul a.active { color: var(--ink); background: rgba(157,107,255,.18); }
   @media (max-width: 720px) { nav ul { display: none; } }
+  .lang-switch { display: flex; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 999px; flex-shrink: 0; }
+  .lang-switch button { font: 500 11px "JetBrains Mono", monospace; letter-spacing: .08em; color: var(--muted); background: none; border: 0; padding: 4px 9px; border-radius: 999px; cursor: pointer; transition: .2s; }
+  .lang-switch button:hover { color: var(--ink); box-shadow: 0 0 14px rgba(157,107,255,.35); }
+  .lang-switch button.on { color: var(--ink); background: rgba(157,107,255,.22); }
 
   /* Hero */
   .hero { position: relative; min-height: clamp(620px, 100vh, 940px); padding: 130px 0 60px; }
@@ -320,6 +327,7 @@
     <li><a href="#education">Education</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
+  <div class="lang-switch" role="group" aria-label="Language"><button type="button" data-lang="en" class="on" aria-pressed="true">EN</button><button type="button" data-lang="no" aria-pressed="false">NO</button></div>
 </nav>
 
 <header class="hero" id="top">
@@ -333,7 +341,7 @@
       <div class="actions">
         <a class="btn" href="assets/Mert_Sarikaya_CV.pdf" download>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
-          Download CV
+          <span>Download CV</span>
         </a>
         <a class="btn" href="https://www.linkedin.com/in/mert-sarikaya-67550824b/" target="_blank" rel="noopener">LinkedIn</a>
         <a class="btn" href="#contact">Contact</a>
@@ -378,7 +386,7 @@
         </div>
         <div class="location mono">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
-          Trondheim · Drammen, Norway
+          <span>Trondheim · Drammen, Norway</span>
         </div>
       </div>
       <div class="about-text">
@@ -650,9 +658,14 @@ const DPR = Math.min(window.devicePixelRatio || 1, 2);
 /* ---------- Typed role ---------- */
 (() => {
   const el = document.getElementById('typed');
-  const words = ['control systems', 'robot perception', 'marine autonomy', 'AI & machine learning', 'software meets hardware'];
-  if (reduce) { el.textContent = words[0]; return; }
+  const WORDS = {
+    en: ['control systems', 'robot perception', 'marine autonomy', 'AI & machine learning', 'software meets hardware'],
+    no: ['reguleringsteknikk', 'robotpersepsjon', 'maritim autonomi', 'KI og maskinlæring', 'programvare møter maskinvare']
+  };
+  let words = WORDS.en;
   let w = 0, i = 0, del = false;
+  addEventListener('langchange', e => { words = WORDS[e.detail]; w = 0; i = 0; del = false; if (reduce) el.textContent = words[0]; });
+  if (reduce) { el.textContent = words[0]; return; }
   (function tick() {
     const word = words[w];
     el.textContent = word.slice(0, i);
@@ -1015,16 +1028,22 @@ document.querySelectorAll('.copy').forEach(b => b.addEventListener('click', asyn
   const text = b.dataset.copy;
   try { await navigator.clipboard.writeText(text); }
   catch { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); }
-  b.textContent = 'Copied'; b.classList.add('done');
-  clearTimeout(b._t); b._t = setTimeout(() => { b.textContent = 'Copy'; b.classList.remove('done'); }, 1600);
+  const no = document.documentElement.lang === 'nb';
+  b.textContent = no ? 'Kopiert' : 'Copied'; b.classList.add('done');
+  clearTimeout(b._t); b._t = setTimeout(() => { b.textContent = document.documentElement.lang === 'nb' ? 'Kopier' : 'Copy'; b.classList.remove('done'); }, 1600);
 }));
 
 /* ---------- Quote: split into words, highlight key words ---------- */
 (() => {
   const bq = document.getElementById('quoteText'), fig = bq.closest('.quote');
-  const hl = new Set(['engineers', 'create']);
-  bq.innerHTML = bq.textContent.trim().split(/\s+/).map((w, i) =>
-    `<span class="w${hl.has(w) ? ' hl' : ''}" style="transition-delay:${(i * 0.12).toFixed(2)}s">${w}</span>`).join(' ');
+  const Q = {
+    en: { text: bq.textContent.trim(), hl: new Set(['engineers', 'create']) },
+    no: { text: 'Forskere studerer verden slik den er; ingeniører skaper den verden som aldri har vært.', hl: new Set(['ingeniører', 'skaper']) }
+  };
+  const render = l => { bq.innerHTML = Q[l].text.split(/\s+/).map((w, i) =>
+    `<span class="w${Q[l].hl.has(w) ? ' hl' : ''}" style="transition-delay:${(i * 0.12).toFixed(2)}s">${w}</span>`).join(' '); };
+  render('en');
+  addEventListener('langchange', e => render(e.detail));
   new IntersectionObserver(([e], o) => { if (e.isIntersecting) { fig.classList.add('in'); o.disconnect(); } }, { threshold: 0.4 }).observe(fig);
 })();
 
@@ -1109,6 +1128,101 @@ const navIO = new IntersectionObserver(es => es.forEach(e => {
   if (e.isIntersecting) links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
 }), { rootMargin: '-45% 0px -50% 0px' });
 document.querySelectorAll('section, #contact').forEach(s => navIO.observe(s));
+
+/* ---------- Language: English / Norwegian ---------- */
+(() => {
+  // [selector, Norwegian HTML] — an array of HTML maps onto each match in order
+  const NO = [
+    ['nav ul a', ['Om meg', 'Erfaring', 'Prosjekter', 'Utdanning', 'Kontakt']],
+    ['.hero .eyebrow', '<span class="dot"></span>Kybernetikk og robotikk · NTNU'],
+    ['.hero .lead', 'Masterstudent i kybernetikk og robotikk ved Norges teknisk-naturvitenskapelige universitet (NTNU), med stor interesse for maritim industri og skjæringspunktet der programvare møter maskinvare.'],
+    ['.hero .actions a:nth-child(1) span', 'Last ned CV'],
+    ['.hero .actions a:nth-child(3)', 'Kontakt'],
+
+    ['#about h2', 'Om meg'],
+    ['.location span', 'Trondheim · Drammen, Norge'],
+    ['.about-text p', 'Jeg er fra Drammen og bor nå i Trondheim, der jeg går fjerde året på NTNU: første år av en toårig master i kybernetikk og robotikk med fordypning i navigasjon og fartøystyring, etter en bachelor i automatisering og intelligente systemer. Det meste jeg har jobbet med så langt er persepsjonssystemer, regulatorer og tilstandsestimatorer som kjører på ekte roboter, bygget med ROS&nbsp;2, C++ og Python. I bacheloroppgaven min hos SINTEF Ocean bygde jeg et ROS&nbsp;2-system som lar en robotarm se og håndtere tarekimplanter, og i Vortex NTNU jobbet jeg med autonomi for undervanns- og overflatefartøy. I det siste har jeg fordypet meg i KI, maskinlæring og datavitenskap, og jeg ønsker å jobbe i en bredere internasjonal og flerkulturell sammenheng.'],
+    ['.fact span', ['Læringsassistent ved NTNU', 'Språk']],
+
+    ['#experience h2', 'Erfaring'],
+    ['.timeline .item:nth-child(1) h3', 'Studentforsker <span class="org">· SINTEF Ocean / NTNU</span>'],
+    ['.timeline .item:nth-child(1) h3 + .org', 'Bacheloroppgave, RI Seaweed-prosjektet · skrevet sammen med Wiktor Jerzy Rutkowski'],
+    ['.timeline .item:nth-child(1) li', [
+      'Bygde et ROS 2-system for persepsjon og styring i Python og C++ for robotisert håndtering av taresylindre, med bevegelsesplanlegging i MoveIt via en egen wrapper og et action-grensesnitt.',
+      'Maskinsyn på dybdedata fra Intel RealSense D455: RANSAC-planestimering, DBSCAN-klynging og PCA for å estimere posen til sylinderen, koblet sammen med TF2.',
+      'Integrerte en egenutviklet griper styrt via Raspberry Pi og Arduino Uno, og flyttet systemet fra den planlagte KUKA KR 10 til en Franka Research 3 underveis etter forsinket levering.']],
+    ['.timeline .item:nth-child(1) .item-links a', 'Les bacheloroppgaven (PDF) →'],
+    ['.timeline .item:nth-child(2) h3', 'Læringsassistent <span class="org">· NTNU</span>'],
+    ['.timeline .item:nth-child(2) h3 + .org', 'Fornybar energiinformatikk (ELDI1001), tre år på rad'],
+    ['.timeline .item:nth-child(2) li', [
+      'Veiledet Raspberry Pi-laber, en maskinlæringslab med energidata og dataanalyse i Python med pandas.',
+      'Hjalp studentene med ukentlige øvinger og rettet innleveringene.',
+      'I 2026 bidro jeg også til å ta imot og følge opp nye studenter under NTNUs oppstartsuke (Teknostart).']],
+    ['.timeline .item:nth-child(3) h3', 'Medlem av autonomigruppen <span class="org">· Vortex NTNU</span>'],
+    ['.timeline .item:nth-child(3) li', [
+      'Jobbet med programvaren for AUV- og ASV-utvikling til RoboSub-konkurransen, blant annet dynamisk posisjonering, i et tverrfaglig team.',
+      'Oversatte Python-funksjonalitet til C++ for bedre integrasjon og vedlikeholdbarhet.']],
+    ['.timeline .item:nth-child(4) h3', 'Butikkmedarbeider <span class="org">· Kiwi Buskerud</span>'],
+
+    ['#projects h2', 'Prosjekter'],
+    ['#projects article:nth-of-type(1) h3', 'Visjonsstyrt robot for tarehåndtering'],
+    ['#projects article:nth-of-type(1) .body p', 'Bacheloroppgave hos SINTEF Ocean: et ROS 2-system der en Franka Research 3-arm finner en taredyrkingssylinder med et RealSense D455-dybdekamera og plukker den opp med en egenutviklet griper styrt av Raspberry Pi og Arduino. Bevegelsene går gjennom en MoveIt-wrapper med et action-grensesnitt for målposer.'],
+    ['#projects article:nth-of-type(1) .card-links a', ['Se demoen →', 'Se på GitHub →', 'Les oppgaven (PDF) →']],
+    ['#projects article:nth-of-type(2) h3', 'Helikopterlab'],
+    ['#projects article:nth-of-type(2) .body p', 'Fire labøkter på et helikopter med tre frihetsgrader (pitch, elevasjon, travel) i MATLAB og Simulink: modellering og PD-regulering med polplassering, LQR med integralvirkning, og deretter tilstandsestimering fra en støyete IMU med en Luenberger-observer og et tidsdiskret Kalman-filter. Hver test undersøkte en avveining, for eksempel vektingen i LQR eller hvor mye filteret stoler på modellen kontra målingene. <span class="mono" style="font-size:12px">TTK4115</span>'],
+    ['#projects article:nth-of-type(2) .card-links a', 'Les labrapporten (PDF) →'],
+    ['#projects article:nth-of-type(3) h3', 'Automatisering av vanntank'],
+    ['#projects article:nth-of-type(3) .body p', 'Gruppeprosjekt der vi satte en tankrigg i drift: en master- og en slave-PLS fra Mitsubishi (FBD, Ladder, ST) på Profibus DP, med et iX HMI-panel og et InTouch SCADA holdt synkronisert via KEPServerEX. Nivåreguleringen bruker en diskret PID med anti-windup, referansefiltrering og foroverkobling, i tillegg til et alarmsystem med automatisk nødfylling og -tømming.'],
+    ['#projects article:nth-of-type(3) .card-links a', 'Les prosjektrapporten (PDF) →'],
+    ['#projects article:nth-of-type(4) h3', 'Automatisk plantevanning'],
+    ['#projects article:nth-of-type(4) .body p', 'Selvstendig prosjekt fra høsten 2026: en ESP32 leser jordfuktighetssensorer og slår på en pumpe via en IRLZ44N-MOSFET og et Finder 40.61-relé når jorda er tørr. Fastvaren er skrevet i C++ med PlatformIO i VS Code og publisert under NTNU ITKs Microlabs-prosjekt.'],
+    ['#projects article:nth-of-type(4) .card-links a', 'Se på GitHub →'],
+
+    ['#education h2', 'Utdanning'],
+    ['.edu-card:nth-child(1) h3', 'Master, kybernetikk og robotikk <span class="badge">Pågående</span>'],
+    ['.edu-card:nth-child(1) .sub', ['Norges teknisk-naturvitenskapelige universitet (NTNU), Trondheim', 'Fordypning: navigasjon og fartøystyring']],
+    ['.edu-card:nth-child(1) .course-label', ['Nåværende emner', 'Planlagt']],
+    ['.edu-card:nth-child(1) .chip', ['Lineær systemteori', 'Digital signalbehandling', 'Algoritmer og datastrukturer',
+      'Optimalisering og regulering (MPC)', 'Sanntidsprogrammering', 'Navigasjon, styring og regulering', 'Kunstig intelligens', 'Maskinlæring', 'Sensorfusjon']],
+    ['.edu-card:nth-child(2) h3', 'Bachelor, automatisering og intelligente systemer'],
+    ['.edu-card:nth-child(2) .sub', ['Norges teknisk-naturvitenskapelige universitet (NTNU), Trondheim', 'Fordypning: kybernetikk og robotikk']],
+    ['.edu-card:nth-child(2) .course-label', 'Relevante emner'],
+    ['.edu-card:nth-child(2) .chip', ['Reguleringsteknikk 1 og 2', 'Digitale reguleringssystemer', 'Industrielle styresystemer', 'Innføring i automatisering',
+      'Automatiseringsprosjekt', 'Sanntidssystemer', 'Robotikk og maskinsyn', 'Nettverksprogrammering og sikkerhet',
+      'Programmering, numerikk og sikkerhet', 'Prosedyre- og objektorientert programmering', 'Fornybar energiinformatikk', 'Systemtenkning for ingeniører',
+      'Elektriske kretser 1 og 2', 'Matematikk 1–3', 'Fysikk', 'Statistikk']],
+
+    ['#skills h2', 'Ferdigheter'],
+    ['#skills .skill-group h3', ['Programmering', 'Verktøy og plattformer', 'Innebygde systemer og maskinvare', 'Språk']],
+    ['#skills .lang > span:first-child', ['Engelsk', 'Norsk', 'Tyrkisk', 'Spansk']],
+
+    ['#contact h2', 'Kontakt'],
+    ['#contact > p', 'Åpen for internship, sommerjobber og masteroppgavesamarbeid innen robotikk og maritim autonomi.'],
+    ['#contact .actions a:nth-child(1)', 'Send e-post'],
+    ['.cd-label', ['E-post', 'Telefon']],
+    ['.copy', 'Kopier'],
+    ['footer', '© 2026 MERT SARIKAYA · TRONDHEIM OG DRAMMEN, NORGE']
+  ];
+
+  const swaps = [];
+  for (const [sel, no] of NO) {
+    const els = document.querySelectorAll(sel);
+    if (!els.length) console.warn('i18n: no match for', sel);
+    els.forEach((el, k) => swaps.push([el, el.innerHTML, Array.isArray(no) ? no[k] : no]));
+  }
+  const btns = document.querySelectorAll('.lang-switch button');
+  function setLang(l, save) {
+    document.documentElement.lang = l === 'no' ? 'nb' : 'en';
+    swaps.forEach(([el, en, no]) => { if (no !== undefined) el.innerHTML = l === 'no' ? no : en; });
+    btns.forEach(b => { const on = b.dataset.lang === l; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+    dispatchEvent(new CustomEvent('langchange', { detail: l }));
+    if (save) try { localStorage.setItem('lang', l); } catch {}
+  }
+  btns.forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang, true)));
+  let start = new URLSearchParams(location.search).get('lang');
+  if (start !== 'no' && start !== 'en') { try { start = localStorage.getItem('lang'); } catch {} }
+  if (start === 'no') setLang('no', false);
+})();
 </script>
 </body>
 </html>
