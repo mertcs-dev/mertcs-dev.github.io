@@ -1021,7 +1021,7 @@ document.querySelectorAll('.copy').forEach(b => b.addEventListener('click', asyn
 /* ---------- Quote: split into words, highlight key words ---------- */
 (() => {
   const bq = document.getElementById('quoteText'), fig = bq.closest('.quote');
-  const hl = new Set(['engineers', 'create', 'never', 'been.']);
+  const hl = new Set(['engineers', 'create']);
   bq.innerHTML = bq.textContent.trim().split(/\s+/).map((w, i) =>
     `<span class="w${hl.has(w) ? ' hl' : ''}" style="transition-delay:${(i * 0.12).toFixed(2)}s">${w}</span>`).join(' ');
   new IntersectionObserver(([e], o) => { if (e.isIntersecting) { fig.classList.add('in'); o.disconnect(); } }, { threshold: 0.4 }).observe(fig);
