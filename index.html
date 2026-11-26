@@ -222,7 +222,8 @@
   .item > .logo { right: 24px; width: 68px; height: 68px; border-radius: 14px; }
   .item.minor { min-height: 112px; display: flex; flex-direction: column; justify-content: center; }
   .item.minor > .logo { top: 50%; transform: translateY(-50%); }
-  @media (max-width: 600px) { .item { padding-right: 24px; } .item > .logo { position: static; width: 44px; height: 44px; margin-bottom: 10px; display: block; } }
+  @media (max-width: 600px) { .item { padding-right: 24px; } .item > .logo { position: static; width: 44px; height: 44px; margin-bottom: 10px; display: block; }
+    .item.minor { min-height: 0; align-items: flex-start; } .item.minor > .logo { transform: none; } }
   .item::before { content: ""; position: absolute; left: -31px; top: 28px; width: 14px; height: 14px; border-radius: 50%;
     background: var(--bg); border: 2px solid var(--cyan); box-shadow: 0 0 14px var(--cyan); }
   .item.minor::before { border-color: var(--muted); box-shadow: none; }
