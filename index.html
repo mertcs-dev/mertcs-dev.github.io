@@ -433,8 +433,9 @@
         </div>
         <div class="body">
           <h3>Helicopter Lab</h3>
-          <p>LQR controller with a Kalman filter for state estimation, controlling a physical lab helicopter in MATLAB and Simulink. <span class="mono" style="font-size:12px">TTK4115</span></p>
-          <div class="tags"><span class="tag">LQR</span><span class="tag">Kalman</span><span class="tag">Simulink</span></div>
+          <p>Four lab sessions on a 3-DOF helicopter (pitch, elevation, travel) in MATLAB and Simulink: modelling and PD control with pole placement, LQR with integral action, then state estimation from a noisy IMU with a Luenberger observer and a discrete-time Kalman filter. Each test probed a trade-off, such as LQR weighting or how much the filter trusts the model versus the measurements. <span class="mono" style="font-size:12px">TTK4115</span></p>
+          <div class="tags"><span class="tag">LQR</span><span class="tag">Kalman</span><span class="tag">Observer</span><span class="tag">Simulink</span></div>
+          <div class="card-links"><a href="assets/Helicopter_Lab_Report.pdf" target="_blank" rel="noopener">Read the lab report (PDF) →</a></div>
         </div>
       </article>
 
@@ -456,14 +457,15 @@
             <rect x="30" y="85" width="50" height="34" rx="4" fill="#0e1230" stroke="#9d6bff"/>
             <text x="55" y="106" text-anchor="middle" fill="#c9b5ff" font-family="JetBrains Mono" font-size="10">PLC</text>
             <path d="M80 102 H110" stroke="#8f97c4" stroke-dasharray="3 3"/>
-            <text x="220" y="100" fill="#8f97c4" font-family="JetBrains Mono" font-size="9">Modbus</text>
-            <text x="220" y="112" fill="#8f97c4" font-family="JetBrains Mono" font-size="9">Profibus</text>
+            <text x="220" y="100" fill="#8f97c4" font-family="JetBrains Mono" font-size="9">Profibus DP</text>
+            <text x="220" y="112" fill="#8f97c4" font-family="JetBrains Mono" font-size="9">OPC</text>
           </svg>
         </div>
         <div class="body">
           <h3>Water Tank Automation</h3>
-          <p>Programmed a Mitsubishi PLC (FBD, Ladder, ST) to control and monitor a water tank, with HMI and SCADA interfaces over Modbus and Profibus.</p>
-          <div class="tags"><span class="tag">PLC</span><span class="tag">SCADA</span><span class="tag">Modbus</span></div>
+          <p>Group project putting a tank rig into operation: a master and a slave Mitsubishi PLC (FBD, Ladder, ST) on Profibus DP, with an iX HMI panel and an InTouch SCADA kept in sync through KEPServerEX. Level control uses a discrete PID with anti-windup, reference smoothing and feedforward, plus an alarm system with automatic emergency fill and drain.</p>
+          <div class="tags"><span class="tag">PLC</span><span class="tag">PID</span><span class="tag">SCADA</span><span class="tag">Profibus</span></div>
+          <div class="card-links"><a href="assets/Water_Tank_Automation_Report.pdf" target="_blank" rel="noopener">Read the project report (PDF, Norwegian) →</a></div>
         </div>
       </article>
 
