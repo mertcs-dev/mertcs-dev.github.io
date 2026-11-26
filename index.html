@@ -187,6 +187,8 @@
   .loop-diagram .caption { font-size: 14px; color: var(--muted); margin: 14px auto 0; max-width: 760px; text-align: center; }
 
   /* Photo slideshow in project cards */
+  #projects .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 720px) { #projects .grid { grid-template-columns: 1fr; } }
   .card .art.photos { position: relative; height: 200px; overflow: hidden; }
   .card .art.photos img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.2s ease, transform 6s ease; transform: scale(1.04); }
   .card .art.photos img.show { opacity: 1; transform: scale(1); }
@@ -425,6 +427,18 @@
   <section id="projects" class="reveal">
     <div class="section-head"><h2>Projects</h2></div>
     <div class="grid stagger">
+      <article class="card panel">
+        <div class="art photos">
+          <img src="assets/seaweed-robot.jpg" alt="Franka Research 3 arm with the custom gripper and depth camera above a kelp cultivation cylinder" class="show" style="object-position: 50% 40%">
+        </div>
+        <div class="body">
+          <h3>Vision-Guided Kelp Handling Robot</h3>
+          <p>Bachelor thesis at SINTEF Ocean: a ROS 2 system where a Franka Research 3 arm finds a kelp cultivation cylinder with a RealSense D455 depth camera and picks it up with a custom Raspberry Pi and Arduino gripper. Motion runs through a MoveIt wrapper with a goal-pose action interface.</p>
+          <div class="tags"><span class="tag">ROS 2</span><span class="tag">MoveIt</span><span class="tag">C++</span><span class="tag">Point clouds</span></div>
+          <div class="card-links"><a href="https://youtu.be/OoFcQQnob7I" target="_blank" rel="noopener">Watch the demo →</a><a href="https://github.com/Gingerbr3ad/Bachelor-RI-Seaweed-Robot-Control" target="_blank" rel="noopener">View on GitHub →</a><a href="assets/Bachelor_Thesis_RI_Seaweed.pdf" target="_blank" rel="noopener">Read the thesis (PDF) →</a></div>
+        </div>
+      </article>
+
       <article class="card panel">
         <div class="art photos" data-slideshow>
           <img src="assets/heli-lab-2.webp" alt="Lab helicopter with two rotors on a pivoting arm" class="show" style="object-position: 50% 60%">
