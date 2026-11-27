@@ -402,8 +402,8 @@
   <section id="quote" class="quote-section" aria-label="Quote">
     <div class="aurora-band"><canvas id="aurora" aria-hidden="true"></canvas></div>
     <figure class="quote">
-      <blockquote id="quoteText">Scientists study the world as it is; engineers create the world that has never been.</blockquote>
-      <figcaption><span class="line"></span>Theodore von Kármán<span class="line"></span></figcaption>
+      <blockquote id="quoteText">The important thing is not to stop questioning.</blockquote>
+      <figcaption><span class="line"></span>Albert Einstein<span class="line"></span></figcaption>
     </figure>
   </section>
 
@@ -1037,8 +1037,8 @@ document.querySelectorAll('.copy').forEach(b => b.addEventListener('click', asyn
 (() => {
   const bq = document.getElementById('quoteText'), fig = bq.closest('.quote');
   const Q = {
-    en: { text: bq.textContent.trim(), hl: new Set(['engineers', 'create']) },
-    no: { text: 'Forskere studerer verden slik den er; ingeniører skaper den verden som aldri har vært.', hl: new Set(['ingeniører', 'skaper']) }
+    en: { text: bq.textContent.trim(), hl: new Set(['questioning.']) },
+    no: { text: 'Det viktigste er å aldri slutte å stille spørsmål.', hl: new Set(['stille', 'spørsmål.']) }
   };
   const render = l => { bq.innerHTML = Q[l].text.split(/\s+/).map((w, i) =>
     `<span class="w${Q[l].hl.has(w) ? ' hl' : ''}" style="transition-delay:${(i * 0.12).toFixed(2)}s">${w}</span>`).join(' '); };
@@ -1134,14 +1134,14 @@ document.querySelectorAll('section, #contact').forEach(s => navIO.observe(s));
   // [selector, Norwegian HTML] — an array of HTML maps onto each match in order
   const NO = [
     ['nav ul a', ['Om meg', 'Erfaring', 'Prosjekter', 'Utdanning', 'Kontakt']],
-    ['.hero .eyebrow', '<span class="dot"></span>Kybernetikk og robotikk · NTNU'],
-    ['.hero .lead', 'Master-/sivilingeniørstudent i kybernetikk og robotikk ved Norges teknisk-naturvitenskapelige universitet (NTNU), med stor interesse for maritim industri og skjæringspunktet der programvare møter maskinvare.'],
+    ['.hero .eyebrow', '<span class="dot"></span>Kybernetikk og Robotikk · NTNU'],
+    ['.hero .lead', 'Master-/sivilingeniørstudent i Kybernetikk og Robotikk ved Norges teknisk-naturvitenskapelige universitet (NTNU), med stor interesse for maritim industri og skjæringspunktet der programvare møter maskinvare.'],
     ['.hero .actions a:nth-child(1) span', 'Last ned CV'],
     ['.hero .actions a:nth-child(3)', 'Kontakt'],
 
     ['#about h2', 'Om meg'],
     ['.location span', 'Trondheim · Drammen, Norge'],
-    ['.about-text p', 'Jeg er opprinnelig fra Drammen og bor nå i Trondheim, der jeg går fjerde året på NTNU: første år av en toårig master/sivilingeniør i kybernetikk og robotikk med fordypning i navigasjon og fartøystyring, etter en bachelor i automatisering og intelligente systemer. Det meste jeg har jobbet med så langt er persepsjonssystemer, regulatorer og tilstandsestimatorer som kjører på ekte roboter, bygget med ROS&nbsp;2, C++ og Python. I bacheloroppgaven min hos SINTEF Ocean bygde jeg et ROS&nbsp;2-system som lar en robotarm se og håndtere tarekimplanter, og i Vortex NTNU jobbet jeg med autonomi for undervanns- og overflatefartøy. I det siste har jeg fordypet meg i KI, maskinlæring og datavitenskap, og jeg ønsker å jobbe i en bredere internasjonal og flerkulturell sammenheng.'],
+    ['.about-text p', 'Jeg er opprinnelig fra Drammen og bor nå i Trondheim, der jeg går fjerde året på NTNU: første år av en toårig master/sivilingeniør i Kybernetikk og Robotikk med fordypning i navigasjon og fartøystyring, etter en bachelor i automatisering og intelligente systemer. Det meste jeg har jobbet med så langt er persepsjonssystemer, regulatorer og tilstandsestimatorer som kjører på ekte roboter, bygget med ROS&nbsp;2, C++ og Python. I bacheloroppgaven min hos SINTEF Ocean bygde jeg et ROS&nbsp;2-system som lar en robotarm se og håndtere tarekimplanter, og i Vortex NTNU jobbet jeg med autonomi for undervanns- og overflatefartøy. I det siste har jeg fordypet meg i KI, maskinlæring og datavitenskap, og jeg ønsker å jobbe i en bredere internasjonal og flerkulturell sammenheng.'],
     ['.fact span', ['Læringsassistent ved NTNU', 'Språk']],
 
     ['#experience h2', 'Erfaring'],
@@ -1179,13 +1179,13 @@ document.querySelectorAll('section, #contact').forEach(s => navIO.observe(s));
     ['#projects article:nth-of-type(4) .card-links a', 'Se på GitHub →'],
 
     ['#education h2', 'Utdanning'],
-    ['.edu-card:nth-child(1) h3', 'Master/sivilingeniør, kybernetikk og robotikk <span class="badge">Pågående</span>'],
+    ['.edu-card:nth-child(1) h3', 'Master/sivilingeniør, Kybernetikk og Robotikk <span class="badge">Pågående</span>'],
     ['.edu-card:nth-child(1) .sub', ['Norges teknisk-naturvitenskapelige universitet (NTNU), Trondheim', 'Fordypning: navigasjon og fartøystyring']],
     ['.edu-card:nth-child(1) .course-label', ['Nåværende emner', 'Planlagt']],
     ['.edu-card:nth-child(1) .chip', ['Lineær systemteori', 'Digital signalbehandling', 'Algoritmer og datastrukturer',
       'Optimalisering og regulering (MPC)', 'Sanntidsprogrammering', 'Navigasjon, styring og regulering', 'Kunstig intelligens', 'Maskinlæring', 'Sensorfusjon']],
     ['.edu-card:nth-child(2) h3', 'Bachelor, automatisering og intelligente systemer'],
-    ['.edu-card:nth-child(2) .sub', ['Norges teknisk-naturvitenskapelige universitet (NTNU), Trondheim', 'Fordypning: kybernetikk og robotikk']],
+    ['.edu-card:nth-child(2) .sub', ['Norges teknisk-naturvitenskapelige universitet (NTNU), Trondheim', 'Fordypning: Kybernetikk og Robotikk']],
     ['.edu-card:nth-child(2) .course-label', 'Relevante emner'],
     ['.edu-card:nth-child(2) .chip', ['Reguleringsteknikk 1 og 2', 'Digitale reguleringssystemer', 'Industrielle styresystemer', 'Innføring i automatisering',
       'Automatiseringsprosjekt', 'Sanntidssystemer', 'Robotikk og maskinsyn', 'Nettverksprogrammering og sikkerhet',
