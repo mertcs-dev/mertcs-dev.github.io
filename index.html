@@ -1037,8 +1037,8 @@ document.querySelectorAll('.copy').forEach(b => b.addEventListener('click', asyn
 (() => {
   const bq = document.getElementById('quoteText'), fig = bq.closest('.quote');
   const Q = {
-    en: { text: bq.textContent.trim(), hl: new Set(['questioning.']) },
-    no: { text: 'Det viktigste er å aldri slutte å stille spørsmål.', hl: new Set(['stille', 'spørsmål.']) }
+    en: { text: bq.textContent.trim(), hl: new Set() },
+    no: { text: 'Det viktigste er å aldri slutte å stille spørsmål.', hl: new Set() }
   };
   const render = l => { bq.innerHTML = Q[l].text.split(/\s+/).map((w, i) =>
     `<span class="w${Q[l].hl.has(w) ? ' hl' : ''}" style="transition-delay:${(i * 0.12).toFixed(2)}s">${w}</span>`).join(' '); };
